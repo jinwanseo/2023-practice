@@ -6,7 +6,7 @@ export default `#graphql
         address: String!
         photos: [Photo]
         standByList: [StandBy]
-        manager: [Manager]
+        managers: [Manager]
         createdAt: String
         updatedAt: String
     }

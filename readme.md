@@ -38,3 +38,6 @@
 >   >   > - [ ] Manager typeDefs / resolvers SET
 >   >   > - [ ] Store typeDefs / resolvers SET
 >   >   > - [ ] Photo typeDefs / resolvers SET
+
+- [ ] 유저가 대기 취소시, 유저 내 StandByList 개수가 없을시, 유저 객체도 삭제
+- [ ] StandByList 개수가 있을시, StandBy 정보만 삭제 (현재 적용 되어있음)
