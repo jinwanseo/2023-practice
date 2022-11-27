@@ -7,6 +7,9 @@ export default `#graphql
         createManager(
             username: String!
             password: String!
+            name: String!
+            phone: String!
+            email: String
             storeName: String!
             storeNumber: String!
             storeAddress: String!

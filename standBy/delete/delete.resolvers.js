@@ -1,9 +1,9 @@
 import client from "../../client.js";
-import { protectResolver } from "../../user/user.utils.js";
+import { protectUserResolver } from "../../user/user.utils.js";
 
 export default {
   Mutation: {
-    deleteStandBy: protectResolver(
+    deleteStandBy: protectUserResolver(
       async (_, { storeId }, { loggedInUser, token }) => {
         try {
           const searchStandBy = await client.standBy.findFirst({

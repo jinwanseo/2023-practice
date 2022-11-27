@@ -6,7 +6,16 @@ export default {
     // CreateManager
     createManager: async (
       _,
-      { username, password, storeName, storeNumber, storeAddress }
+      {
+        username,
+        password,
+        name,
+        phone,
+        email,
+        storeName,
+        storeNumber,
+        storeAddress,
+      }
     ) => {
       try {
         // Manager 아이디 중복 여부 확인
@@ -36,6 +45,9 @@ export default {
           data: {
             username,
             password: bcrypted,
+            name,
+            phone,
+            email,
             store: {
               connect: {
                 id: storeId,

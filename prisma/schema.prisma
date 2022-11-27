@@ -26,6 +26,7 @@ model StandBy {
   userId    Int
   storeId   Int
   token     String?
+  state     String   @default("wait")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -46,6 +47,9 @@ model Manager {
   id        Int      @id @default(autoincrement())
   username  String   @unique
   password  String
+  name      String
+  phone     String
+  email     String?
   store     Store    @relation(fields: [storeId], references: [id])
   storeId   Int
   createdAt DateTime @default(now())
