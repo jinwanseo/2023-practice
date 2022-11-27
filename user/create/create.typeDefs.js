@@ -1,6 +1,7 @@
 export default `#graphql
     type CreateUserResult {
         ok: Boolean!
+        token: String
         error: String
     }
     type Mutation {

@@ -11,6 +11,7 @@ import bodyParser from "body-parser";
 import morgan from "morgan";
 import { typeDefs, resolvers } from "./schema.js";
 import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.mjs";
+import { getUser } from "./user/user.utils.js";
 
 const PORT = process.env.PORT;
 
@@ -30,7 +31,10 @@ app.use("/static", express.static("uploads"));
 app.use(
   graphqlUploadExpress(),
   expressMiddleware(server, {
-    context: async ({ req }) => ({ token: req.headers.token }),
+    context: async ({ req }) => ({
+      loggedInUser: await getUser(req.headers.token),
+      token: req.headers.token,
+    }),
   })
 );
 

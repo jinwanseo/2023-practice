@@ -30,9 +30,9 @@
 
 ## TODO
 
-> - [ ] GraphQL SET
-> - [ ] Database SET
->   > - [ ] Prisma Model SET
+> - [x] GraphQL SET
+> - [x] Database SET
+>   > - [x] Prisma Model SET
 >   >   > - [ ] User typeDefs / resolvers SET
 >   >   > - [ ] Standby typeDefs / resolvers SET
 >   >   > - [ ] Manager typeDefs / resolvers SET
