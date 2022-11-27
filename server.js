@@ -7,7 +7,6 @@ import express from "express";
 import http from "http";
 import cors from "cors";
 import bodyParser from "body-parser";
-// import helmet from "helmet";
 import morgan from "morgan";
 import { typeDefs, resolvers } from "./schema.js";
 import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.mjs";
