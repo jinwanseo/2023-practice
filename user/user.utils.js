@@ -45,6 +45,7 @@ export const protectUserResolver =
     }
     return resolver(root, args, context, info);
   };
+
 export const protectManagerResolver =
   (resolver) => (root, args, context, info) => {
     if (!context.loggedInManager) {

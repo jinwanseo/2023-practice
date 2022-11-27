@@ -4,6 +4,7 @@ export default `#graphql
         error: String
     }
     type Mutation {
-        deleteStandBy(storeId: Int!): DeleteStandByResult
+        deleteStandByFromUser(storeId: Int!): DeleteStandByResult
+        deleteStandByFromManager(userId: Int!): DeleteStandByResult
     }
 `;

@@ -21,8 +21,6 @@ export default {
         if (!bcrypt.compareSync(password, searchManager.password))
           throw new Error("아이디 또는 비밀번호가 잘못되었습니다");
 
-        console.log(searchManager);
-
         const token = jwt.sign(
           { managerId: searchManager.id },
           process.env.JWT_SECRET
