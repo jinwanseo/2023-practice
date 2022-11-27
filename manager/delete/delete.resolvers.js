@@ -13,7 +13,7 @@ export default {
             },
           });
 
-          // 2. 스토어 삭제 마지막 매니저 일시 스토어 삭제
+          // 2. 스토어 삭제 마지막 매니저 일시, 스토어 삭제
           if (managerCount === 1) {
             // 대기 리스트 삭제
             await client.standBy.deleteMany({
