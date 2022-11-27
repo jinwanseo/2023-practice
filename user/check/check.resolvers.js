@@ -3,7 +3,19 @@ import { protectUserResolver } from "../user.utils.js";
 
 export default {
   Query: {
-    checkCount: protectUserResolver(
+    checkStore: (_, { storeId }) => {
+      return client.store.findUnique({
+        where: { id: storeId },
+        select: {
+          id: true,
+          name: true,
+          address: true,
+          number: true,
+          photos: true,
+        },
+      });
+    },
+    checkCountFromUser: protectUserResolver(
       async (_, { storeId }, { loggedInUser }) => {
         try {
           const searchedStandBy = await client.standBy.findUnique({
@@ -43,6 +55,26 @@ export default {
             error: err.message,
           };
         }
+      }
+    ),
+    checkStandByListFromUser: protectUserResolver(
+      async (_, __, { loggedInUser }) => {
+        return await client.standBy.findMany({
+          where: {
+            userId: loggedInUser.id,
+          },
+          include: {
+            store: {
+              select: {
+                id: true,
+                name: true,
+                number: true,
+                address: true,
+                photos: true,
+              },
+            },
+          },
+        });
       }
     ),
   },

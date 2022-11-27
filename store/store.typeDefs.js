@@ -7,6 +7,7 @@ export default `#graphql
         photos: [Photo]
         standByList: [StandBy]
         managers: [Manager]
+        standByCount: Int
         createdAt: String
         updatedAt: String
     }

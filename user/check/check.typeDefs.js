@@ -4,7 +4,10 @@ export default `#graphql
         count: Int,
         error: String
     }
+
     type Query {
-        checkCount(storeId: Int!): CheckCountResult
+        checkStore(storeId: Int!): Store
+        checkCountFromUser(storeId: Int!): CheckCountResult
+        checkStandByListFromUser: [StandBy]
     }
 `;
