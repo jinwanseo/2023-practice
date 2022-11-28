@@ -11,7 +11,7 @@ export const uploadPhoto = async (file, storeId) => {
   const { filename, createReadStream } = await file;
   const readStream = createReadStream();
   const fileName = `${storeId}-${Date.now()}-${filename}`;
-  const { Location: url } = await new AWS.S3()
+  const { Location: fileUrl } = await new AWS.S3()
     .upload({
       Bucket: "standbytogether",
       Key: fileName,
@@ -19,7 +19,7 @@ export const uploadPhoto = async (file, storeId) => {
       Body: readStream,
     })
     .promise();
-  return { url, name: fileName };
+  return { fileUrl, fileName };
 };
 
 export const deletePhoto = async (deleteFileName) => {

@@ -4,7 +4,7 @@ export default `#graphql
         error: String
     }
     type Mutation {
-        uploadPhoto(file: Upload): PhotoResult
-        deletePhoto(id: Int): PhotoResult
+        uploadPhoto(file: Upload!): PhotoResult
+        deletePhoto(id: Int!): PhotoResult
     }
 `;

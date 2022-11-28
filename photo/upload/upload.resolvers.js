@@ -7,16 +7,11 @@ export default {
     uploadPhoto: protectManagerResolver(
       async (_, { file }, { loggedInManager }) => {
         try {
-          let fileUrl = null;
-          let fileName = null;
-          if (file) {
-            const { url, name } = await uploadPhoto(
-              file,
-              loggedInManager.storeId
-            );
-            fileUrl = url;
-            fileName = name;
-          }
+          const { fileUrl, fileName } = await uploadPhoto(
+            file,
+            loggedInManager.storeId
+          );
+
           await client.photo.create({
             data: {
               fileUrl,
