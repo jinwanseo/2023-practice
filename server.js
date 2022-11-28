@@ -26,7 +26,6 @@ const server = new ApolloServer({
 await server.start();
 
 app.use(cors(), morgan("tiny"), bodyParser.json());
-app.use("/static", express.static("uploads"));
 app.use(
   graphqlUploadExpress(),
   expressMiddleware(server, {

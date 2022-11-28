@@ -1,5 +1,6 @@
 import client from "../../client.js";
 import { protectManagerResolver } from "../../user/user.utils.js";
+import { deletePhoto } from "../../shared/shared.utils.js";
 
 export default {
   Mutation: {
@@ -22,9 +23,24 @@ export default {
               },
             });
 
-            // 매니저 삭제
+            // // 매니저 삭제
             await client.manager.delete({
               where: { id: loggedInManager.id },
+            });
+
+            // 스토어 관련 Photo Search / Delete
+            const storePhotoFileNames = await client.photo.findMany({
+              where: { storeId: loggedInManager.storeId },
+              select: { fileName: true },
+            });
+            // AWS 삭제
+            for (const file of storePhotoFileNames)
+              await deletePhoto(file.fileName);
+            // DB 삭제
+            await client.photo.deleteMany({
+              where: {
+                storeId: loggedInManager.storeId,
+              },
             });
 
             // 스토어 삭제

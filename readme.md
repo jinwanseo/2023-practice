@@ -33,11 +33,11 @@
 > - [x] GraphQL SET
 > - [x] Database SET
 >   > - [x] Prisma Model SET
->   >   > - [ ] User typeDefs / resolvers SET
->   >   > - [ ] Standby typeDefs / resolvers SET
->   >   > - [ ] Manager typeDefs / resolvers SET
->   >   > - [ ] Store typeDefs / resolvers SET
+>   >   > - [x] User typeDefs / resolvers SET
+>   >   > - [x] StandBy typeDefs / resolvers SET
+>   >   > - [x] Manager typeDefs / resolvers SET
+>   >   > - [x] Store typeDefs / resolvers SET
 >   >   > - [ ] Photo typeDefs / resolvers SET
 
-- [ ] 유저가 대기 취소시, 유저 내 StandByList 개수가 없을시, 유저 객체도 삭제
-- [ ] StandByList 개수가 있을시, StandBy 정보만 삭제 (현재 적용 되어있음)
+- [x] 유저가 대기 취소시, 유저 내 StandByList 개수가 없을시, 유저 객체도 삭제
+- [x] StandByList 개수가 있을시, StandBy 정보만 삭제 (현재 적용 되어있음)
