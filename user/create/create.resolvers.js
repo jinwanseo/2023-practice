@@ -1,5 +1,7 @@
 import client from "../../client.js";
 import jwt from "jsonwebtoken";
+import pubsub from "../../pubsub.js";
+import { UPDATE_STANDBYLIST } from "../../constants.js";
 export default {
   Mutation: {
     createUser: async (
@@ -41,7 +43,7 @@ export default {
 
           // 대기열 없을시 대기열 생성 + 토큰 저장 + ok
           if (!standBy) {
-            await client.standBy.create({
+            const standbyInfo = await client.standBy.create({
               data: {
                 store: {
                   connect: {
@@ -55,6 +57,14 @@ export default {
                 },
                 token,
               },
+              include: {
+                user: true,
+              },
+            });
+
+            //TODO:  대기 등록 스토어 소켓 알림
+            pubsub.publish(UPDATE_STANDBYLIST, {
+              updateStandBy: { ...standbyInfo },
             });
           }
 
@@ -128,7 +138,7 @@ export default {
         // 토큰 발급
         const token = jwt.sign({ id: userId }, process.env.JWT_SECRET);
         // 3. StandBy 생성 +User Connect + Store Connect
-        await client.standBy.create({
+        const standbyInfo = await client.standBy.create({
           data: {
             user: {
               connect: {
@@ -142,6 +152,12 @@ export default {
             },
             token,
           },
+          include: { user: true },
+        });
+
+        //TODO: 대기 등록 스토어 소켓 알림
+        pubsub.publish(UPDATE_STANDBYLIST, {
+          updateStandBy: { ...standbyInfo },
         });
 
         return {

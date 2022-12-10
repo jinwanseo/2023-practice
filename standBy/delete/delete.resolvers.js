@@ -1,4 +1,6 @@
 import client from "../../client.js";
+import { UPDATE_STANDBYLIST } from "../../constants.js";
+import pubsub from "../../pubsub.js";
 import {
   protectManagerResolver,
   protectUserResolver,
@@ -6,6 +8,7 @@ import {
 
 export default {
   Mutation: {
+    // 대기 취소 (유저)
     deleteStandByFromUser: protectUserResolver(
       async (_, { storeId }, { loggedInUser, token }) => {
         try {
@@ -19,9 +22,10 @@ export default {
               },
               token: token,
             },
-            select: {
-              id: true,
-            },
+            include: { user: true },
+            // select: {
+            //   id: true,
+            // },
           });
 
           if (!searchStandBy)
@@ -42,6 +46,11 @@ export default {
           });
           if (!standByCount)
             await client.user.delete({ where: { id: loggedInUser.id } });
+
+          // TODO: 대기 취소 처리 스토어 소켓 알림
+          pubsub.publish(UPDATE_STANDBYLIST, {
+            updateStandBy: { ...searchStandBy, ...{ state: "cacel" } },
+          });
 
           return {
             ok: true,

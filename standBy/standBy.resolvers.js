@@ -1,3 +1,7 @@
 export default {
-  Query: {},
+  StandBy: {
+    user: ({ user }) => {
+      return user;
+    },
+  },
 };

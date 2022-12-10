@@ -3,6 +3,7 @@ import { protectUserResolver } from "../user.utils.js";
 
 export default {
   Query: {
+    // 스토어 정보 GET
     checkStore: (_, { storeId }) => {
       return client.store.findUnique({
         where: { id: storeId },
@@ -15,6 +16,7 @@ export default {
         },
       });
     },
+    // 대기 팀 수 GET
     checkCountFromUser: protectUserResolver(
       async (_, { storeId }, { loggedInUser }) => {
         try {
@@ -57,6 +59,7 @@ export default {
         }
       }
     ),
+    // 대기 스토어 리스트 GET
     checkStandByListFromUser: protectUserResolver(
       async (_, __, { loggedInUser }) => {
         return await client.standBy.findMany({
