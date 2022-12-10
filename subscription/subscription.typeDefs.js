@@ -1,5 +1,6 @@
 export default `#graphql
     type Subscription {
-        updateStandBy: StandBy
+        updateStandByFromUser: StandBy
+        updateStandByFromManager: StandBy
     }
 `;

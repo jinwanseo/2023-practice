@@ -49,7 +49,7 @@ export default {
 
           // TODO: 대기 취소 처리 스토어 소켓 알림
           pubsub.publish(UPDATE_STANDBYLIST, {
-            updateStandBy: { ...searchStandBy, ...{ state: "cacel" } },
+            updateStandByFromUser: { ...searchStandBy, ...{ state: "cacel" } },
           });
 
           return {

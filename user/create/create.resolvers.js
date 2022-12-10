@@ -64,7 +64,7 @@ export default {
 
             //TODO:  대기 등록 스토어 소켓 알림
             pubsub.publish(UPDATE_STANDBYLIST, {
-              updateStandBy: { ...standbyInfo },
+              updateStandByFromUser: { ...standbyInfo },
             });
           }
 
@@ -105,6 +105,7 @@ export default {
           const standBy = await client.standBy.findFirst({
             where: {
               userId,
+              storeId,
             },
             select: {
               id: true,
@@ -135,6 +136,7 @@ export default {
           // UserId 저장
           userId = newUser.id;
         }
+
         // 토큰 발급
         const token = jwt.sign({ id: userId }, process.env.JWT_SECRET);
         // 3. StandBy 생성 +User Connect + Store Connect
@@ -154,10 +156,11 @@ export default {
           },
           include: { user: true },
         });
+        console.log(standbyInfo);
 
         //TODO: 대기 등록 스토어 소켓 알림
         pubsub.publish(UPDATE_STANDBYLIST, {
-          updateStandBy: { ...standbyInfo },
+          updateStandByFromUser: { ...standbyInfo },
         });
 
         return {
