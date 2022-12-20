@@ -1,108 +1,27 @@
-import { gql, useMutation, useReactiveVar } from "@apollo/client";
-import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { gql, useMutation } from "@apollo/client";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import {
-  darkModeVar,
-  disableDarkMode,
-  enableDarkMode,
-  logManagerIn,
-  managerLoginVar,
-} from "../apollo";
-import path from "../router/path";
-const Container = styled.div`
-  width: 100%;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
-const StyledTitle = styled.span`
-  font-size: 18px;
-  font-weight: 600;
-  user-select: none;
-`;
+import { logManagerIn } from "apollo";
+import Button from "components/Button";
+import path from "router/path";
+import Container from "components/Container";
+import { Caption, LogoTitle, SubTitle } from "components/Heading";
+import Card from "components/Card";
+import Input from "components/Input";
+import HelperText from "components/HelperText";
+import Form from "components/Form";
+import HeaderBar from "components/Header";
+import StyledLink from "components/StyledLink";
+import Message from "components/Message";
+import LogoText from "components/LogoText";
 
-const LogoTitle = styled(StyledTitle)`
-  text-transform: uppercase;
-  cursor: pointer;
-`;
-
-const HelperText = styled(StyledTitle)`
-  margin-top: -8px;
-  font-size: 13px;
-  color: tomato;
-  padding-left: 3px;
-`;
-
-const SubTitle = styled(StyledTitle)`
-  font-size: 22px;
-  font-weight: 700;
-`;
-
-const Caption = styled(StyledTitle)`
-  font-size: 14px;
-  font-weight: 400;
-`;
-const Header = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  justify-content: space-between;
-  align-items: center;
-`;
 const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin: auto;
   gap: 16px;
-`;
-const IconButton = styled.span`
-  padding: 8px;
-  cursor: pointer;
-  transform: scale(1.05);
-  transition: all 300ms ease-in-out;
-`;
-
-const Card = styled.div`
-  border-color: ${(props) => props.theme.borderColor};
-  border: 1px solid;
-  padding: 32px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
-  border-radius: 12px;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
-
-const Input = styled.input`
-  min-width: 150px;
-  border: 1px solid #95a5a6;
-  padding: 8px 16px;
-`;
-
-const Button = styled.input`
-  padding: 12px 16px;
-  color: white;
-  text-align: center;
-  background-color: ${(props) => props.theme.success};
-  opacity: ${(props) => (props.disabled ? 0.6 : 1)};
-  &:hover {
-    transform: scale(1.01);
-    transition: all 150ms ease-in;
-    box-shadow: 1px 1px 1px grey;
-  }
-  cursor: ${(props) => (props.disabled ? "default" : "pointer")};
 `;
 
 const LOGIN_MANAGER = gql`
@@ -116,9 +35,8 @@ const LOGIN_MANAGER = gql`
 `;
 
 function Login(props) {
-  const isDarkMode = useReactiveVar(darkModeVar);
+  const location = useLocation();
   const navigator = useNavigate();
-
   const [login, { loading }] = useMutation(LOGIN_MANAGER);
 
   const {
@@ -127,39 +45,44 @@ function Login(props) {
     setError,
     clearErrors,
     formState: { errors, isValid },
-  } = useForm({ mode: "onChange" });
+  } = useForm({
+    mode: "onChange",
+    defaultValues: {
+      username: location?.state?.username,
+      password: location?.state?.password,
+    },
+  });
 
   const handlers = {
     onSubmit: (data) => {
       login({
         variables: data,
-      }).then(({ data }) => {
-        if (!data?.loginManager?.ok) {
-          setError("result", { message: data?.loginManager?.error });
-          return;
-        }
-        logManagerIn(data.loginManager.token);
-        navigator(path.home);
-      });
+      })
+        .then(({ data }) => {
+          if (!data?.loginManager?.ok) {
+            setError("result", { message: data?.loginManager?.error });
+            return;
+          }
+          logManagerIn(data.loginManager.token);
+          navigator(path.home);
+        })
+        .catch((err) =>
+          setError("result", { message: "서버 에러 (1~2분 후 재시도)" })
+        );
     },
   };
 
   return (
     <Container>
-      <Header>
-        <LogoTitle>Standby Togeter</LogoTitle>
-        <IconButton onClick={isDarkMode ? disableDarkMode : enableDarkMode}>
-          <FontAwesomeIcon icon={isDarkMode ? faMoon : faSun} size="lg" />
-        </IconButton>
-      </Header>
+      <HeaderBar />
       <ContentWrapper>
         <Card>
-          <img
-            src="/images/logo_icon_.png"
-            alt="logo"
-            style={{ width: "40px" }}
-          />
-          <SubTitle>관리자 로그인</SubTitle>
+          <LogoText />
+
+          <SubTitle>스토어 로그인</SubTitle>
+
+          <Message>{location?.state?.message}</Message>
+
           <Form onSubmit={handleSubmit(handlers.onSubmit)}>
             <Input
               {...register("username", {
@@ -172,9 +95,8 @@ function Login(props) {
               error={Boolean(errors?.username?.message)}
               onChange={() => clearErrors("result")}
             />
-            {errors?.username?.message && (
-              <HelperText>{errors?.username?.message}</HelperText>
-            )}
+            <HelperText>{errors?.username?.message}</HelperText>
+
             <Input
               type="password"
               {...register("password", {
@@ -187,20 +109,16 @@ function Login(props) {
               error={Boolean(errors?.password?.message)}
               onChange={() => clearErrors("result")}
             />
-            {errors?.password?.message && (
-              <HelperText>{errors?.password?.message}</HelperText>
-            )}
-
-            {errors?.result?.message && (
-              <HelperText>{errors?.result?.message}</HelperText>
-            )}
+            <HelperText>{errors?.password?.message}</HelperText>
+            <HelperText>{errors?.result?.message}</HelperText>
             <Button type="submit" value="로그인" disabled={loading} />
           </Form>
         </Card>
         <Card style={{ display: "flex", flexDirection: "row" }}>
-          <Link to={path.join}>
-            <Caption>회원 가입 하기</Caption>
-          </Link>
+          <Caption>계정이 없으신가요?</Caption>
+          <Caption>
+            <StyledLink to={path.join}>가입하기</StyledLink>
+          </Caption>
         </Card>
       </ContentWrapper>
     </Container>
