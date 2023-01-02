@@ -170,6 +170,8 @@ export default function Post({ id, isLiked }) {
 
 - Query / Mutation 호출 후 부분 화면 재랜더링이 필요한 경우 캐시 변경으로 가능
 
+### All
+
 ```jsx
 import React from "react";
 import { gql, useMutation } from "@apollo/client";
@@ -220,6 +222,59 @@ export default function Post({ id, isLiked }) {
           })
         }
       }
+    });
+  };
+  return (
+    <React.Fragment>
+      <>...</>
+      <LikeBtn isLiked={isLiked} onClick={toggleLike} />
+      <>...</>
+    </React.Fragment>
+  );
+}
+```
+
+### 3,0 이상
+
+```jsx
+import React from "react";
+import { gql, useMutation } from "@apollo/client";
+const LIKE_MUTATION = gql`
+  mutation ToggleLike($id: String!, $isLiked: Boolean!) {
+    ToggleLike(id: $id, isLiked: $isLiked) {
+      ok
+      error
+    }
+  }
+`;
+
+export default function Post({ id, isLiked }) {
+  const [like, { loading }] = useMutation(LIKE_MUTATION);
+  const toggleLike = () => {
+    like({
+      variables: {
+        id: id,
+        isLiked: !isLiked,
+      },
+      // cache 업데이트 (result는 toggleLike 호출 후 응답 데이터)
+      update: (cache, result) => {
+        const {
+          data: {
+            toggleLike: { ok },
+          },
+        } = result;
+        if (ok) {
+          // fragmentId는 개발자 모드 > apollo cache상의 id 를 뜻한다
+          const fragmentId = `Post:${id}`;
+          cache.modify({
+            id: fragmentId,
+            fields: {
+              isLiked: (prevVal) => !prevVal,
+              likes: (prevVal) => (isLiked ? prevVal - 1 : preVal + 1),
+            },
+          });
+        }
+      },
     });
   };
   return (
