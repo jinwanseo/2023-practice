@@ -6,14 +6,10 @@ description: 아폴로 클라이언트 학습 중 주요 기술 정리
 
 ## client 객체 생성
 
-* apollo.js
+- apollo.js
 
 ```jsx
-import {
-  createHttpLink,
-  InMemoryCache,
-  makeVar,
-} from "@apollo/client";
+import { createHttpLink, InMemoryCache, makeVar } from "@apollo/client";
 
 // Header 추가를 위한 http link 생성
 const httpLink = createHttpLink({
@@ -36,7 +32,7 @@ export const client = new ApolloClient({
 });
 ```
 
-* index.js
+- index.js
 
 ```jsx
 import { ApolloProvider } from "@apollo/client";
@@ -125,9 +121,61 @@ export default function Login() {
 }
 ```
 
+## Query / Mutation 호출 후 다른 Query / Mutation의 추가 호출이 필요할때
+
+- ex) 좋아요 클릭시 결과 즉시 반영 (캐시 사용 없이 호출 하는 경우)
+- 단점 : 리스트 목록이 많은 경우 모두 다시 받아온 후 재랜더링하기 때문에 캐시 직접 변경 권장 [캐시변경](#cache-변경)
+
+```jsx
+import React from "react";
+import { gql, useMutation } from "@apollo/client";
+const LIKE_MUTATION = gql`
+  mutation ToggleLike($id: String!, $isLiked: Boolean!) {
+    ToggleLike(id: $id, isLiked: $isLiked) {
+      ok
+      error
+    }
+  }
+`;
+
+export default function Post({ id, isLiked }) {
+  const [like, { loading }] = useMutation(LIKE_MUTATION);
+  const toggleLike = () => {
+    like({
+      variables: {
+        id: id,
+        isLiked: !isLiked,
+      },
+      // refetchQueries 사용시 다른 Query 재호출
+      refetchQueries: [
+        {
+          query: POST_QUERY, //다른 query
+          variables: {}, // variables가 필요한 경우
+        },
+      ],
+    });
+  };
+  return (
+    <React.Fragment>
+      <>...</>
+      <LikeBtn isLiked={isLiked} onClick={toggleLike} />
+      <>...</>
+    </React.Fragment>
+  );
+}
+```
+
+## Cache 변경
+
+- Query / Mutation 호출 후 부분 화면 재랜더링이 필요한 경우 캐시 변경으로 가능
+
+```jsx
+
+```
+
 ## 데이터 전역 사용
 
-* apollo.js
+- apollo.js
 
 ```jsx
 import { makeVar } from "@apollo/client";
@@ -147,7 +195,7 @@ export const logUserOut = (navigate) => {
 };
 ```
 
-* 전역 데이터 사용 .jsx
+- 전역 데이터 사용 .jsx
 
 ```jsx
 import React from "react";
