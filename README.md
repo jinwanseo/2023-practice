@@ -1,12 +1,15 @@
+---
+description: 아폴로 클라이언트 학습 중 주요 기술 정리
+---
+
 # Apollo Client 사용 기술 정리
 
 ## client 객체 생성
 
-- apollo.js
+* apollo.js
 
-```js
+```jsx
 import {
-  ApolloClient,
   createHttpLink,
   InMemoryCache,
   makeVar,
@@ -33,9 +36,9 @@ export const client = new ApolloClient({
 });
 ```
 
-- index.js
+* index.js
 
-```js
+```jsx
 import { ApolloProvider } from "@apollo/client";
 import { client } from "./apollo";
 
@@ -50,7 +53,7 @@ root.render(
 
 ## query 사용
 
-```js
+```jsx
 import { gql, useQuery } from "@apollo/client";
 const SEE_POST = gql`
   query SeePost {
@@ -76,7 +79,7 @@ export default function Post() {
 
 ## mutation 사용
 
-```js
+```jsx
 import { gql, useMutation } from "@apollo/client";
 
 // mutation 사용 파일 상단에 Mutation String 작성
@@ -124,9 +127,9 @@ export default function Login() {
 
 ## 데이터 전역 사용
 
-- apollo.js
+* apollo.js
 
-```js
+```jsx
 import { makeVar } from "@apollo/client";
 const TOKEN = "token";
 
@@ -144,9 +147,9 @@ export const logUserOut = (navigate) => {
 };
 ```
 
-- 전역 데이터 사용 .jsx
+* 전역 데이터 사용 .jsx
 
-```js
+```jsx
 import React from "react";
 import { useReactiveVar } from "@apollo/client";
 
