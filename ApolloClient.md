@@ -121,8 +121,9 @@ export default function Login() {
 }
 ```
 
-## Query / Mutation 호출 후 다른 Query / Mutation의 추가 호출이 필요할때
+## refetchQueries 추가 호출
 
+- Query / Mutation 호출 후 다른 Query / Mutation의 추가 호출이 필요할때
 - ex) 좋아요 클릭시 결과 즉시 반영 (캐시 사용 없이 호출 하는 경우)
 - 단점 : 리스트 목록이 많은 경우 모두 다시 받아온 후 재랜더링하기 때문에 캐시 직접 변경 권장 [캐시변경](#cache-변경)
 
@@ -170,7 +171,65 @@ export default function Post({ id, isLiked }) {
 - Query / Mutation 호출 후 부분 화면 재랜더링이 필요한 경우 캐시 변경으로 가능
 
 ```jsx
+import React from "react";
+import { gql, useMutation } from "@apollo/client";
+const LIKE_MUTATION = gql`
+  mutation ToggleLike($id: String!, $isLiked: Boolean!) {
+    ToggleLike(id: $id, isLiked: $isLiked) {
+      ok
+      error
+    }
+  }
+`;
 
+export default function Post({ id, isLiked }) {
+  const [like, { loading }] = useMutation(LIKE_MUTATION);
+  const toggleLike = () => {
+    like({
+      variables: {
+        id: id,
+        isLiked: !isLiked,
+      },
+      // cache 업데이트 (result는 toggleLike 호출 후 응답 데이터)
+      update : (cache, result) => {
+        const {data : {toggleLike: {ok}}} = result;
+        if(ok) {
+          // fragmentId는 개발자 모드 > apollo cache상의 id 를 뜻한다
+          const fragmentId =  `Post:${id}`;
+          // fragment는 캐시 전용 query라고 생각하면됨
+          const fragment = gql`
+              fragment BSName on Post {
+                isLiked
+              }
+            `;
+          // 기존 캐시 조회 (readFragment)
+          const {isLiked: cacheIsLiked, cacheLikes} = cache.readFragment({
+            id: fragmentId,
+            fragment: fragment,
+          })
+
+          // 캐시 변경 (writeFragment)
+          cache.writeFragment({
+            id: fragmentId,
+            fragment: fragment
+            // 변환 데이터 작성
+            data: {
+              isLiked : cacheIsLiked,
+              likes : cacheIsLiked ? cacheLikes + 1 : cacheLikes -1,
+            }
+          })
+        }
+      }
+    });
+  };
+  return (
+    <React.Fragment>
+      <>...</>
+      <LikeBtn isLiked={isLiked} onClick={toggleLike} />
+      <>...</>
+    </React.Fragment>
+  );
+}
 ```
 
 ## 데이터 전역 사용
