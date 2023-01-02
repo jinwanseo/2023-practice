@@ -1,0 +1,18 @@
+{
+  "pluginsConfig": {
+    "block-code": {
+      "cloneButton": true,
+      "lineNumber": true,
+      "cloneButtonStyle": {
+        "color": "#c1c7cd",
+        "color-hover": "#c1c7cd",
+        "bg": "transparent",
+        "bg-hover": "transparent"
+      },
+      "cloneButtonIcon": {
+        "clone": "fa-clone",
+        "check": "fa-check"
+      }
+    }
+  }
+}
