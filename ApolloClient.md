@@ -234,7 +234,7 @@ export default function Post({ id, isLiked }) {
 }
 ```
 
-### 3,0 이상
+### 3.0 이상
 
 ```jsx
 import React from "react";
@@ -285,6 +285,56 @@ export default function Post({ id, isLiked }) {
     </React.Fragment>
   );
 }
+```
+
+### Cache 조회
+
+```jsx
+const { author, description } = cache.readFragment({
+  id: `Comment:${result.id}`,
+  fragment: gql`
+    fragment BSName on Comment {
+      author
+      decription
+    }
+  `,
+});
+```
+
+### Cache 추가
+
+- 캐시를 "추가" 하는 경우는 게시물 업로드시 추가 호출을 하지 않고 UI 출력을 위해 사용함
+
+```jsx
+const newCacheComment = cache.writeComment({
+  fragment: gql`
+    fragment BSName on Comment {
+      author
+      description
+    }
+  `,
+  data: newComment,
+});
+```
+
+### Cache 수정
+
+```jsx
+cache.modify({
+  id: `Comment:${modifyId}`,
+  fields: {
+    author: (prev) => `from ${prev}`,
+    decsription: (prev, { readField }) => `${prev} from ${readField("author")}`,
+  },
+});
+```
+
+### Cache 삭제
+
+```jsx
+cache.evict({
+  id: `Comment:${removeId}`,
+});
 ```
 
 ## 데이터 전역 사용
