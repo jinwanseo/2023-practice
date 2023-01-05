@@ -92,8 +92,8 @@ const LOGIN_MUTATION = gql`
 export default function Login() {
   const [login, { loading }] = useMutation(LOGIN_MUTATION);
   const onSubmit = (e) => {
-    const username = e.taret.username;
-    const password = e.target.password;
+    const username = e.taret.username.value;
+    const password = e.target.password.value;
     login({
       variables: {
         username,
@@ -108,7 +108,8 @@ export default function Login() {
       }
       if (token) {
         //... 토큰 저장
-      })
+      }
+    });
   };
   return (
     <form onSubmit={onSubmit}>
