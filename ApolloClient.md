@@ -267,8 +267,9 @@ export default function Post({ id, isLiked }) {
 }
 ```
 
-## Cache 변경
+## Cache
 
+- 캐시는 react web / react native에서 통신시 발생할수 있는 불필요한 리소를 제거하기 위해 다소 불편하지만 필요시 꼭 추가해야하고 해당 부분을 잘 다룰줄 알아야 한다. (앱 성능과 직결됨)
 - Query / Mutation 호출 후 부분 화면 재랜더링이 필요한 경우 캐시 변경으로 가능
 
 ### All
@@ -435,6 +436,32 @@ cache.modify({
 ```jsx
 cache.evict({
   id: `Comment:${removeId}`,
+});
+```
+
+### 캐시 (고유값 변경 원할시) default key : id
+
+- 간단 설명
+
+  > 위에서 언급한 내용 처럼 서버 통신후 ui 변경 적용시 서버 / 클라이언트의 부담을 줄이기 위해 Apollo Client에서는 Cache를 사용한다 (client측에서 사용하는 중간 데이터 베이스라고 생각해도 될듯)
+  > 하지만, 캐시를 선택하고 변경하고 삭재하기 위해서는 고유값이 정확해야하는데 고유값이 명확하지 않거나 없는 상태에서 캐시를 추가하게되면 Root Cache에 문자열로 남게된다 (CRUD 불가능)
+  > Apollo Client에서는 자동으로 id 값을 캐시의 고유값으로 인식하여 설정해주는 성격(?)이 있는데, 부득이하게 id 값을 사용하지 못할때 다른 slug를 설정해야 한다.
+  > 아래 해당 내용을 자세히 기술하였으니 참고바람
+
+- 아폴로 클라이언트 설정 파일
+
+```jsx
+import { InMemoryCache, ApolloClient } from "@apollo/client";
+
+const client = new ApolloClient({
+  cache: new InMemoryCache({
+    // 아래와 같이 설정시 User관련 캐시는 id 기준이 아닌 username 기준으로 저장이 된다.
+    // 참고로, 여기서 username은 로그인 아이디로 유니크한 값이다.
+    // Cache 저장 String : User:admin
+    typePolicies: {
+      User: (userObj) => `User:${userObj.username}`,
+    },
+  }),
 });
 ```
 
