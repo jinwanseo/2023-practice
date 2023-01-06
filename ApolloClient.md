@@ -122,6 +122,106 @@ export default function Login() {
 }
 ```
 
+## fragment 사용
+
+- fragment 는 여러 경로에서 사용 된다.
+  - Cache 수정시
+  - 반복되는 query/mutation 내 쿼리문 재작성
+
+### 기본 문법
+
+```jsx
+import { gql } from "@apollo/client";
+
+export const POST_FRAGMENT = gql`
+  // 여기서 PostFragment는 fragment끼리의 구분자를 뜻한다
+  // Post 는 BE 모델/타입명과 동일하게 맞추어야 한다.
+  fragment PostFragment on Post {
+    id
+    title
+    description
+    author
+  }
+`;
+```
+
+### 재사용 용도 (변수화)
+
+- fragment 재사용 하기 (query/mutation)
+
+```jsx
+import { gql } from "@apollo/client";
+import { POST_FRAGMENT } from "../fragments.js";
+
+const GET_POST_QUERY = gql`
+  query GetPost ($id: String!) {
+    getPost (id: $id) {
+      // 이곳에 추가할 fragment의 구분자를 넣는다
+      ...PostFragment
+    }
+  }
+  // query 문 바깥쪽에 import 한 Fragment 파일을 추가한다.
+  ${POST_GRAGMENT}
+`;
+```
+
+### 캐시 변경 용도
+
+```jsx
+import { gql, useMutation } from "@apollo/client";
+
+const UPDATE_POST_MUTATION = gql`
+  mutation UpdatePost($title: String!, $description: String!) {
+    updatePost(title: $title, description: $description) {
+      ok
+      error
+    }
+  }
+`;
+
+function Post({ id, title, description, author, menuId }) {
+  useMutation(UPDATE_POST_MUTATION, {
+    variables : {
+      ...updatePost,
+    },
+    update: (cache, result) => {
+      // 여기서 새로운 캐시 생성시 Fragment 사용 가능
+      const newCachePost = cache.writeFragment({
+        fragment: gql`
+          fragment UpdatePostFragment on Post {
+            title
+            decsription
+            author
+          }
+        `,
+        data : updatePost,
+      })
+
+      cache.modify({
+        menu: `Menu:${menuId}`,
+        fields : {
+          posts : (prevPosts) => [...prevPosts, updatePost],
+        }
+      })
+    }
+  })
+
+  const handlers = {
+    onUpdatePost : () => {},
+    onRemovePost : () => {},
+  }
+  return (
+    <StyledContainer>
+      <PostTitle />
+      <PostDescription />
+      <PostAuthor />
+      <UpdateButton onClick={handlers.onUpdatePost}>
+      <RemoveButton onClick={handlers.onRemovePost}>
+    </StyledContainer>
+  );
+}
+```
+
 ## refetchQueries 추가 호출
 
 - Query / Mutation 호출 후 다른 Query / Mutation의 추가 호출이 필요할때
