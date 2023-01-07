@@ -1,9 +1,9 @@
 # Table of contents
 
-* [Apollo Client 사용 기술 정리](README.md)
-* [GitHub Repository](ApolloServer.md)
-* [ReactSkills](ReactSkills.md)
+- [Apollo Client 사용 기술 정리](README.md)
+- [GitHub Repository](ApolloServer.md)
+- [ReactSkills](ReactSkills.md)
 
-## Modules
+## Posts
 
-* [Styled-Components](modules/styled-components.md)
+- [Styled-Components](posts/styled-components.md)
