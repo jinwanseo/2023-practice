@@ -226,7 +226,7 @@ function Post({ id, title, description, author, menuId }) {
 
 - Query / Mutation 호출 후 다른 Query / Mutation의 추가 호출이 필요할때
 - ex) 좋아요 클릭시 결과 즉시 반영 (캐시 사용 없이 호출 하는 경우)
-- 단점 : 리스트 목록이 많은 경우 모두 다시 받아온 후 재랜더링하기 때문에 캐시 직접 변경 권장 [캐시변경](#cache-변경)
+- 단점 : 리스트 목록이 많은 경우 모두 다시 받아온 후 재랜더링하기 때문에 여러 범위의 캐시 업데이트가 필요한 경우가 아니면 캐시 직접 변경 권장 [캐시변경](#cache-변경)
 
 ```jsx
 import React from "react";
