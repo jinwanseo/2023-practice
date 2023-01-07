@@ -4,10 +4,10 @@
 
 ## Apollo
 
-- [Server](./Apollo/Server.md.md)
-- [Client](./Apollo/Client.md.md)
+- [Server](./Apollo/Server.md)
+- [Client](./Apollo/Client.md)
 
 ## React Modules
 
-- [ReactSkills](./React/Skills.md.md)
-- [StyledComponents](./React/StyledComponents.md.md)
+- [ReactSkills](./React/Skills.md)
+- [StyledComponents](./React/StyledComponents.md)
