@@ -445,8 +445,8 @@ cache.evict({
 
   > 위에서 언급한 내용 처럼 서버 통신후 ui 변경 적용시 서버 / 클라이언트의 부담을 줄이기 위해 Apollo Client에서는 Cache를 사용한다 (client측에서 사용하는 중간 데이터 베이스라고 생각해도 될듯)
   > 하지만, 캐시를 선택하고 변경하고 삭재하기 위해서는 고유값이 정확해야하는데 고유값이 명확하지 않거나 없는 상태에서 캐시를 추가하게되면 Root Cache에 문자열로 남게된다 (CRUD 불가능)
-  > Apollo Client에서는 자동으로 id 값을 캐시의 고유값으로 인식하여 설정해주는 성격(?)이 있는데, 부득이하게 id 값을 사용하지 못할때 다른 slug를 설정해야 한다.
-  > 아래 해당 내용을 자세히 기술하였으니 참고바람
+  > Apollo Client에서는 자동으로 id 값을 캐시의 고유값으로 인식하여 설정해주는데 부득이하게 id 값을 사용하지 못하거나 고유값으로 사용하지 못할때 다른 slug를 설정해야 한다.
+  > 해당 내용을 하단에 자세히 기술하였음
 
 - 아폴로 클라이언트 설정 파일
 
@@ -459,7 +459,9 @@ const client = new ApolloClient({
     // 참고로, 여기서 username은 로그인 아이디로 유니크한 값이다.
     // Cache 저장 String : User:admin
     typePolicies: {
-      User: (userObj) => `User:${userObj.username}`,
+      User: {
+        keyFields: (userObj) => `User:${userObj.username}`,
+      },
     },
   }),
 });
