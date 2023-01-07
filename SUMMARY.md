@@ -9,5 +9,5 @@
 
 ## React Modules
 
-- [ReactSkills](./React/Skills.md)
+- [HelmetProvider](./React/HelmetProvider.md)
 - [StyledComponents](./React/StyledComponents.md)
