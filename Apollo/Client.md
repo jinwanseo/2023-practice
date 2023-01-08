@@ -122,6 +122,77 @@ export default function Login() {
 }
 ```
 
+## Query, Mutation 관련 함수
+
+### update
+
+> update : query / mutation 처리 후 호출 되는 Callback 함수
+
+```jsx
+const GET_USER_QUERY = gql`
+  query getUser($id: String!) {
+    getUser(id: $id) {
+      username
+    }
+  }
+`;
+
+export default function Profile({ id }) {
+  const [getUser, { loading }] = useMutation(GET_USER_QUERY, {
+    variables: {
+      id,
+    },
+    // 여기서 사용하는 업데이트 함수는 GET_USER_QUERY 정상 통신 후 캐시 정보 및 response data(result) 를 전달해준다.
+    update: (cache, result) => {
+      if(!result.ok) throw new Error(...)
+      cache.modify(...)
+    },
+  });
+}
+```
+
+### onCompleted
+
+> onCompleted : query/ mutation 처리 후 호출 되는 Callback 함수
+
+```jsx
+const GET_USER_QUERY = gql`
+  query getUser($id: String!) {
+    getUser(id: $id) {
+      username
+    }
+  }
+`;
+
+export default function Profile({ id }) {
+  const [getUser, { loading }] = useMutation(GET_USER_QUERY, {
+    variables: {
+      id,
+    },
+    // 여기서 사용하는 onCompleted 함수는 GET_USER_QUERY 정상 통신 후 data를 전달해준다.
+    onCompleted: (data) => {
+      if(!data.ok) throw new Error(...)
+      // ⭐️ 여기서 팀!
+      // onCompleted 함수는 update 함수와는 다르게 캐시를 전달받지 않지만
+      // 다른 경로로 캐시 접근은 충분히 가능하다
+      // useApolloClient hook을 통해 client 정보를 받아올수 있는데 아래 링크 참고바람
+    },
+  });
+}
+```
+
+[cache 접근 방법](#useapolloclient를-통한-cache-접근)
+
+#### useApolloClient를 통한 cache 접근
+
+```jsx
+import { useApolloClient } from "@apollo/client";
+export default function Profile() {
+  const client = useApolloClient();
+  const { cache } = client;
+}
+```
+
 ## fragment 사용
 
 - fragment 는 여러 경로에서 사용 된다.
