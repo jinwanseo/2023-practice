@@ -45,3 +45,9 @@ npm run start
 › Press j │ open debugger
 › Press r │ reload app
 › Press m │ toggle menu
+
+> 시뮬레이터 실행 안될시 (shift + i) / 휴대폰 선택
+
+## Expo 시뮬레이터
+
+- Ctrl + Cmd + Z : 개발 메뉴 바 활성화 / 비활성화
