@@ -4,6 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 import AppLoading from "expo-app-loading";
 import { IonIcons } from "@expo/vector-icons/Ionicons";
 import * as Font from "expo-font";
+import { Asset } from "expo-asset";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -12,8 +13,13 @@ export default function App() {
   const preload = () => {
     const fontToLoad = [IonIcons.font];
     const fontPromise = fontToLoad.map((font) => Font.loadAsync(font));
+    const imagesToLoad = [
+      require("./assets/logo.png"),
+      "https://image.similarpng.com/very-thumbnail/2020/06/Instagram-name-logo-transparent-PNG.png",
+    ];
+    const imagesPromises = imagesToLoad.map((image) => Asset.loadAsync(image));
     console.log("Hello React JS!");
-    return Promise.all([...fontPromise]);
+    return Promise.all([...fontPromise, ...imagesPromises]);
   };
 
   if (loading) {
