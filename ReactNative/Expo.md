@@ -51,3 +51,18 @@ npm run start
 ## Expo 시뮬레이터
 
 - Ctrl + Cmd + Z : 개발 메뉴 바 활성화 / 비활성화
+
+## 로딩 바
+
+> 유저가 앱 접속시 앱은 로딩되어있어야 한다.
+> preload 기능 사용하기 위해 설치
+
+```js
+expo install expo-app-loading
+```
+
+## 폰트
+
+```js
+expo install expo-font
+```
