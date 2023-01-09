@@ -8,5 +8,10 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@react-navigation/native-stack": "^6.9.7",
+    "react-native-safe-area-context": "^4.4.1",
+    "react-native-screens": "^3.18.2"
+  }
 }
