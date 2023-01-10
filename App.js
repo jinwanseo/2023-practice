@@ -5,6 +5,7 @@ import * as Font from "expo-font";
 import { Asset } from "expo-asset";
 import LoggedOutNav from "./navigators/LoggedOutNav";
 import { NavigationContainer } from "@react-navigation/native";
+import { Appearance } from "react-native";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -18,7 +19,6 @@ export default function App() {
       "https://image.similarpng.com/very-thumbnail/2020/06/Instagram-name-logo-transparent-PNG.png",
     ];
     const imagesPromises = imagesToLoad.map((image) => Asset.loadAsync(image));
-    console.log("Hello React JS!");
     return Promise.all([...fontPromise, ...imagesPromises]);
   };
 
@@ -31,6 +31,10 @@ export default function App() {
       />
     );
   }
+
+  const subscription = Appearance.addChangeListener(({ colorScheme }) => {
+    console.log(colorScheme);
+  });
 
   return (
     <NavigationContainer>
