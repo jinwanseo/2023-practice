@@ -66,6 +66,56 @@ expo install expo-app-loading
 expo install expo-splash-screen
 ```
 
+### 로딩바 설정
+
+```jsx
+import { useState } from "react";
+import AppLoading from "expo-app-loading";
+import { IonIcons } from "@expo/vector-icons/Ionicons";
+import * as Font from "expo-font";
+import { Asset } from "expo-asset";
+import LoggedOutNav from "./navigators/LoggedOutNav";
+import { NavigationContainer } from "@react-navigation/native";
+
+export default function App() {
+  const [loading, setLoading] = useState(true);
+
+  const onFinish = () => setLoading(false);
+  const preload = () => {
+    // 폰트 리스트
+    const fontToLoad = [IonIcons.font];
+    // 폰트 로드 [Font.loadAsync]
+    const fontPromise = fontToLoad.map((font) => Font.loadAsync(font));
+    // 파일 리스트
+    const imagesToLoad = [
+      require("./assets/logo.png"),
+      "https://image.similarpng.com/very-thumbnail/2020/06/Instagram-name-logo-transparent-PNG.png",
+    ];
+    // 파일 로드 [Asset.loadAsync]
+    const imagesPromises = imagesToLoad.map((image) => Asset.loadAsync(image));
+
+    // Promise All 반환
+    return Promise.all([...fontPromise, ...imagesPromises]);
+  };
+
+  if (loading) {
+    return (
+      <AppLoading
+        startAsync={preload}
+        onError={console.warn}
+        onFinish={onFinish}
+      />
+    );
+  }
+
+  return (
+    <NavigationContainer>
+      <LoggedOutNav />
+    </NavigationContainer>
+  );
+}
+```
+
 ## 폰트
 
 ```js
@@ -86,4 +136,29 @@ expo install expo-asset
 npm install @react-navigation/native
 expo install react-native-screens react-native-safe-area-context
 npm install @react-navigation/native-stack
+```
+
+### 네이게이션 설정
+
+```jsx
+// 주의!! NavigationContainer는 native에서 import 해야한다.
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import CreateAccount from "../screens/CreateAccount";
+import Login from "../screens/Login";
+import Welcome from "../screens/Welcome";
+
+const Stack = createNativeStackNavigator();
+
+export default function LoggedOutNav() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Welcome" component={Welcome} />
+        <Stack.Screen name="CreateAccount" component={CreateAccount} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
 ```
