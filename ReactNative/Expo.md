@@ -162,3 +162,20 @@ export default function LoggedOutNav() {
   );
 }
 ```
+
+## Apearance (시스템 Theme 관리)
+
+> 시스템 dark / light GET 모듈 (native)
+> 설치는 따로 필요없고 아래와 같은 코드
+
+```jsx
+import { Appearance } from "react-native";
+
+// 현재 테마 GET (light, dark)
+Appearance.getColorScheme();
+
+// 테마 변경시 알림
+const subscription = Appearance.addChangeListener(({ colorScheme }) => {
+  console.log(colorScheme);
+});
+```
