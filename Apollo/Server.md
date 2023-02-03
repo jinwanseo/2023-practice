@@ -210,3 +210,34 @@ npm i dotenv
 import dotenv from "dotenv";
 dotenv.config();
 ```
+
+### Upload 설정 (graphql-upload)
+
+- 참고 : https://www.apollographql.com/docs/apollo-server/v3/data/file-uploads/
+
+1. 모듈 설치
+
+```js
+npm i graphql-upload
+```
+
+2. 모듈 설정
+
+```js
+//./server.js
+// 여기서 .mjs 추가 주의!
+import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.mjs";
+{...}
+
+app.use("/", cors(), morgan("tiny"), bodyParser.json());
+app.use(
+  graphqlUploadExpress(),
+  expressMiddleware(server, {
+    context: async ({ req }) => ({
+      loggedInUser: await getUser(req.headers.token),
+    }),
+  })
+);
+```
+
+3.
