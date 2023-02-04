@@ -240,4 +240,44 @@ app.use(
 );
 ```
 
-3.
+3. Upload 타입 선언
+
+```js
+//*.typeDefs.js
+scalar Upload
+type Query {
+  ...
+}
+type Mutation {
+  ...
+}
+
+```
+
+4. Stream 연결
+
+```js
+//
+import {createWriteStream} from "fs"
+
+...
+if (avatar) {
+  const {
+    file: { createReadStream, filename },
+  } = await avatar;
+  const readStream = createReadStream();
+  const writeStream = createWriteStream(`${process.cwd()}/uploads/${filename}`);
+  readStream.pipe(writeStream);
+}
+```
+
+5. Url 연결
+
+```js
+// server.js
+app.use(
+  // static (url: baseURL/static)
+  "/static",
+  express.static("upload")
+);
+```
