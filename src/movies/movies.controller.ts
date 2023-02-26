@@ -1,3 +1,4 @@
+import { MoviesService } from './movies.service';
 import {
   Controller,
   Delete,
@@ -8,6 +9,7 @@ import {
   Body,
   Query,
 } from '@nestjs/common';
+import { Movie } from './entities/movie.entity';
 
 // Controller 역할
 // 1. Url 매핑 (express router)
@@ -16,37 +18,35 @@ import {
 // Param | Body 등 원하는 데이터가 있으면 직접 호출 해야함! (express 처럼 req, res 전부 가져오지 않음!)
 @Controller('movies')
 export class MoviesController {
+  constructor(private readonly moviesServeice: MoviesService) {}
   @Get()
-  getAll() {
-    return 'This will return all movis';
+  getAll(): Movie[] {
+    return this.moviesServeice.getAll();
   }
   @Get('search')
-  search(@Query('title') title: string) {
-    return `We are searchig for movie with a title : ${title}`;
+  search(@Query('title') title: string): Movie[] {
+    return this.moviesServeice.search(title);
   }
   @Get(':id')
-  getOne(@Param('id') movieId: string) {
-    return `this will return one movie, movieId is ${movieId}`;
+  getOne(@Param('id') movieId: string): Movie {
+    return this.moviesServeice.getOne(movieId);
   }
 
   @Post()
-  createMovie(@Body() movieData) {
-    return movieData;
+  createMovie(@Body() movieData): boolean {
+    return this.moviesServeice.create(movieData);
   }
 
   @Delete(':id')
   remove(@Param('id') movieId: string) {
-    return `This will delete a movie with the id : ${movieId}`;
+    return this.moviesServeice.deleteOne(movieId);
   }
 
   // 간혹 PUT 을 사용 안하고 Patch로 사용하는 경우도 있음
   // why ?
   // PUT 은 모든 리소스를 업데이트 하기 때문임.
   @Patch(':id')
-  update(@Param('id') movieId: string, @Body() updateMovie) {
-    return {
-      updatedMovie: movieId,
-      ...updateMovie,
-    };
+  update(@Param('id') movieId: string, @Body() updateMovie: any) {
+    return this.moviesServeice.update(movieId, updateMovie);
   }
 }
