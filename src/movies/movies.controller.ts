@@ -1,3 +1,4 @@
+import { CreateMovieDto } from './dto/create-movie.dto';
 import { MoviesService } from './movies.service';
 import {
   Controller,
@@ -33,7 +34,7 @@ export class MoviesController {
   }
 
   @Post()
-  createMovie(@Body() movieData): boolean {
+  createMovie(@Body() movieData: CreateMovieDto): boolean {
     return this.moviesServeice.create(movieData);
   }
 
@@ -46,7 +47,7 @@ export class MoviesController {
   // why ?
   // PUT 은 모든 리소스를 업데이트 하기 때문임.
   @Patch(':id')
-  update(@Param('id') movieId: string, @Body() updateMovie: any) {
+  update(@Param('id') movieId: string, @Body() updateMovie: CreateMovieDto) {
     return this.moviesServeice.update(movieId, updateMovie);
   }
 }

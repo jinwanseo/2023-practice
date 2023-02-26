@@ -1,3 +1,4 @@
+import { CreateMovieDto } from './dto/create-movie.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Movie } from './entities/movie.entity';
 
@@ -16,11 +17,12 @@ export class MoviesService {
   }
 
   deleteOne(movieId: string): boolean {
+    this.getOne(movieId);
     this.movies = this.movies.filter((m) => m.id !== +movieId);
     return true;
   }
 
-  create(data: Movie) {
+  create(data: CreateMovieDto) {
     this.movies.push({
       id: this.movies.length + 1,
       ...data,
@@ -32,10 +34,13 @@ export class MoviesService {
     return this.movies.filter((m) => m.title.includes(title));
   }
 
-  update(movieId: string, data: Movie): Movie {
+  update(movieId: string, data: any): boolean {
+    this.getOne(movieId);
     const idx = this.movies.findIndex((m) => m.id === +movieId);
-    if (idx < 0) throw new Error('Movie Not Found');
-    this.movies[idx] = data;
-    return this.movies[idx];
+    this.movies[idx].title = data.title;
+    this.movies[idx].year = data.year;
+    this.movies[idx].genres = data.genres;
+
+    return true;
   }
 }
