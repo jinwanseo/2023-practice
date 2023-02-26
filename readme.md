@@ -16,7 +16,7 @@ npm i -g @nestjs/cli
 nest
 
 // 프로젝트 생성
-nest new {project-name}
+nest new
 
 ```
 
