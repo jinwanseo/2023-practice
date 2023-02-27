@@ -1,3 +1,4 @@
+import { UpdateMovieDto } from './dto/update-movie.dto';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { MoviesService } from './movies.service';
 import {
@@ -29,7 +30,7 @@ export class MoviesController {
     return this.moviesServeice.search(title);
   }
   @Get(':id')
-  getOne(@Param('id') movieId: string): Movie {
+  getOne(@Param('id') movieId: number): Movie {
     return this.moviesServeice.getOne(movieId);
   }
 
@@ -39,7 +40,7 @@ export class MoviesController {
   }
 
   @Delete(':id')
-  remove(@Param('id') movieId: string) {
+  remove(@Param('id') movieId: number) {
     return this.moviesServeice.deleteOne(movieId);
   }
 
@@ -47,7 +48,7 @@ export class MoviesController {
   // why ?
   // PUT 은 모든 리소스를 업데이트 하기 때문임.
   @Patch(':id')
-  update(@Param('id') movieId: string, @Body() updateMovie: CreateMovieDto) {
+  update(@Param('id') movieId: number, @Body() updateMovie: UpdateMovieDto) {
     return this.moviesServeice.update(movieId, updateMovie);
   }
 }
