@@ -3,8 +3,9 @@
 ## 개요
 
 1. 설치
-2. 구조
-3. 컨트롤러 생성
+2. Nest CLI
+3. 구조
+4. 컨트롤러 생성
 
 ## 설치
 
@@ -19,6 +20,12 @@ nest
 nest new
 
 ```
+
+## Nest CLI
+
+> nestjs cli의 핵심 기능은 터미널에 nest를 입력시 아래와 같이 출력되는데 원하는 기능 입력시 템플릿이 생성된다 (엄청 유용 ⭐️ 노가다 x)
+>
+> [CLI 이미지 참고](src/img/nestcli.png)
 
 ## 구조
 
@@ -50,21 +57,23 @@ npm i @nestjs/mapped-types
 ### 실행 순서 (흐름)
 
 1. main.ts
-   ```js
-   // 글로벌 미들웨어 추가
-   app.useGlobalPipees(
-     // validation 체크 전용 파이프
-     new ValidationPipe({
-       // dto에 정의 되지 않은 타입은 서버에 도달하지 못하도록 설정
-       whitelist: true,
-       // dto에 없는 값은 에러메시지 송출
-       forbidNonWhitelisted: true,
-       // 보통 컨트롤러에서 param을 받을때 string으로 받게 되는데
-       // 형변환이 필요한 경우 transform 사용 (ex: controller에서 pk param 값을 number로 설정시 string -> number로 자동 형변환)
-       transform: true,
-     }),
-   );
-   ```
+
+```js
+// 글로벌 미들웨어 추가
+app.useGlobalPipees(
+  // validation 체크 전용 파이프
+  new ValidationPipe({
+    // dto에 정의 되지 않은 타입은 서버에 도달하지 못하도록 설정
+    whitelist: true,
+    // dto에 없는 값은 에러메시지 송출
+    forbidNonWhitelisted: true,
+    // 보통 컨트롤러에서 param을 받을때 string으로 받게 되는데
+    // 형변환이 필요한 경우 transform 사용 (ex: controller에서 pk param 값을 number로 설정시 string -> number로 자동 형변환)
+    transform: true,
+  }),
+);
+```
+
 2. dto/create-movie.dto.ts
 
 - 예제 코드
