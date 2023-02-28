@@ -96,3 +96,9 @@ export class CreateMovieDto {
 3. controller / service
 
 - 컨트롤러에서 클라이언트가 전송한 데이터 (Param으로 들어오는 데이터)의 타입을 dto에서 선언한 class로 설정
+
+## 모듈 생성
+```
+nest g mo
+```
+
