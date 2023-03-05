@@ -1,0 +1,25 @@
+import { ArgsType, Field } from '@nestjs/graphql';
+import { IsBoolean, IsString, Length } from 'class-validator';
+
+// @InputType()
+// Object 그자체의 타입 검사
+// resolver 함수 내에서 @Args(파라미터 이름) 적어줘야함
+//@ArgsType()
+// Parameter 타입 정의 (Object 전체가 아닌 개별 요소 검증)
+// resolver 함수 내에서 @Args() 비워 줘야함
+@ArgsType()
+export class CreateRestaurantDto {
+  @IsString()
+  @Field(() => String)
+  @Length(5, 10)
+  name: string;
+  @IsBoolean()
+  @Field(() => Boolean)
+  isVegan: boolean;
+  @Field(() => String)
+  @IsString()
+  address: string;
+  @Field(() => String)
+  @IsString()
+  ownerName: string;
+}
