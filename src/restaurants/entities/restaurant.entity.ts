@@ -5,7 +5,7 @@ export class Restaurant {
   @Field(() => String)
   name: string;
   @Field(() => Boolean, { nullable: true })
-  isVig?: boolean;
+  isVegan?: boolean;
 
   @Field(() => String)
   address: string;

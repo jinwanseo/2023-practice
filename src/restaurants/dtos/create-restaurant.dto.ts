@@ -16,10 +16,10 @@ export class CreateRestaurantDto {
   @IsBoolean()
   @Field(() => Boolean)
   isVegan: boolean;
-  @Field(() => String)
   @IsString()
+  @Field(() => String)
   address: string;
-  @Field(() => String)
   @IsString()
+  @Field(() => String)
   ownerName: string;
 }
