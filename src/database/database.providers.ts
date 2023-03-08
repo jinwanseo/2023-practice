@@ -1,3 +1,4 @@
+import { Restaurant } from 'src/restaurants/entities/restaurant.entity';
 import { DataSource } from 'typeorm';
 
 export const databaseProviders = [
@@ -13,6 +14,7 @@ export const databaseProviders = [
         database: process.env.DB_DATABASE,
         synchronize: true,
         logging: true,
+        entities: [Restaurant],
       });
 
       return dataSource.initialize();

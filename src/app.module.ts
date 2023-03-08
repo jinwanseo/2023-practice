@@ -2,7 +2,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
-// import { TypeOrmModule } from '@nestjs/typeorm';
+import * as Joi from 'joi';
 import { RestaurantsModule } from './restaurants/restaurants.module';
 import { DatabaseModule } from './database/database.module';
 
@@ -16,19 +16,17 @@ import { DatabaseModule } from './database/database.module';
       envFilePath: process.env.NODE_ENV === 'dev' ? '.dev.env' : '.test.env',
       // production 모드일시 env 파일 무시
       ignoreEnvFile: process.env.NODE_ENV === 'prod',
+      // Schema validation check (npm i joi)
+      validationSchema: Joi.object({
+        NODE_ENV: Joi.string().valid('dev', 'prod').required(),
+        DB_HOST: Joi.string().required(),
+        DB_PORT: Joi.string().required(),
+        DB_USERNAME: Joi.string().required(),
+        DB_DATABASE: Joi.string().required(),
+      }),
     }),
 
     DatabaseModule,
-
-    // TypeOrmModule.forRoot({
-    //   type: 'postgres',
-    //   host: process.env.DB_HOST,
-    //   port: +process.env.DB_PORT,
-    //   username: process.env.DB_USERNAME,
-    //   database: process.env.DB_DATABASE,
-    //   synchronize: true,
-    //   logging: true,
-    // }),
 
     // Graphql 추가
     GraphQLModule.forRoot<ApolloDriverConfig>({
