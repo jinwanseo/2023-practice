@@ -8,16 +8,15 @@ export class RestaurantResolver {
   constructor(private readonly restaurantService: RestaurantService) {}
   // Graphql을 위한 타입 선언
   @Query(() => [Restaurant])
-  restaurants(@Args('veganOnly') veganOnly: boolean): Restaurant[] {
-    console.log(veganOnly);
-    return [];
+  restaurants(): Promise<Restaurant[]> {
+    return this.restaurantService.getAll();
   }
 
-  @Mutation(() => Boolean)
-  createRestaurant(
-    @Args() createRestaurantInput: CreateRestaurantDto,
-  ): boolean {
-    console.log(createRestaurantInput);
-    return true;
-  }
+  // @Mutation(() => Boolean)
+  // createRestaurant(
+  //   @Args() createRestaurantInput: CreateRestaurantDto,
+  // ): boolean {
+  //   console.log(createRestaurantInput);
+  //   return true;
+  // }
 }

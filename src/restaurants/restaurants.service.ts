@@ -6,6 +6,11 @@ import { Restaurant } from './entities/restaurant.entity';
 @Injectable()
 export class RestaurantService {
   constructor(
-    @InjectRepository(Restaurant) restaurantRepository: Repository<Restaurant>,
+    @InjectRepository(Restaurant)
+    private readonly restaurantRepository: Repository<Restaurant>,
   ) {}
+
+  getAll(): Promise<Restaurant[]> {
+    return this.restaurantRepository.find();
+  }
 }
