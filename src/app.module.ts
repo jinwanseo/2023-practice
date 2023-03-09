@@ -4,7 +4,9 @@ import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import * as Joi from 'joi';
 import { RestaurantsModule } from './restaurants/restaurants.module';
-import { DatabaseModule } from './database/database.module';
+
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Restaurant } from './restaurants/entities/restaurant.entity';
 
 @Module({
   imports: [
@@ -26,7 +28,16 @@ import { DatabaseModule } from './database/database.module';
       }),
     }),
 
-    DatabaseModule,
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: process.env.DB_HOST,
+      port: +process.env.DB_PORT,
+      username: process.env.DB_USERNAME,
+      database: process.env.DB_DATABASE,
+      synchronize: true,
+      logging: true,
+      entities: [Restaurant],
+    }),
 
     // Graphql 추가
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -34,8 +45,8 @@ import { DatabaseModule } from './database/database.module';
       // inmemory 방식
       autoSchemaFile: true,
     }),
+
     RestaurantsModule,
-    // 모듈
   ],
   controllers: [],
   providers: [],
