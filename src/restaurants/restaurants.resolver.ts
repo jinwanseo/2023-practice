@@ -12,11 +12,10 @@ export class RestaurantResolver {
     return this.restaurantService.getAll();
   }
 
-  // @Mutation(() => Boolean)
-  // createRestaurant(
-  //   @Args() createRestaurantInput: CreateRestaurantDto,
-  // ): boolean {
-  //   console.log(createRestaurantInput);
-  //   return true;
-  // }
+  @Mutation(() => Restaurant)
+  createRestaurant(
+    @Args('input') createRestaurantDto: CreateRestaurantDto,
+  ): Promise<Restaurant> {
+    return this.restaurantService.createRestuarant(createRestaurantDto);
+  }
 }

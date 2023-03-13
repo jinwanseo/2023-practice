@@ -1,5 +1,6 @@
-import { ArgsType, Field } from '@nestjs/graphql';
+import { Field, InputType, OmitType } from '@nestjs/graphql';
 import { IsBoolean, IsString, Length } from 'class-validator';
+import { Restaurant } from '../entities/restaurant.entity';
 
 // @InputType()
 // Object 그자체의 타입 검사
@@ -9,8 +10,9 @@ import { IsBoolean, IsString, Length } from 'class-validator';
 // resolver 함수 내에서 @Args() 비워 줘야함
 
 // 주의 🔥 DTO는 꼭 class Validator 가 들어가야함
-@ArgsType()
-export class CreateRestaurantDto {
+// @ArgsType()
+@InputType()
+export class CreateRestaurantDto extends OmitType(Restaurant, ['id'] as const) {
   @IsString()
   @Field(() => String)
   @Length(5, 10)
