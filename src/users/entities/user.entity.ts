@@ -6,9 +6,10 @@ import {
 } from '@nestjs/graphql';
 import { IsBoolean, IsEmail, IsEnum, IsString } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
-import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { InternalServerErrorException } from '@nestjs/common';
+import { Restaurant } from 'src/restaurants/entities/restaurant.entity';
 
 export enum UserRole {
   Client = 'Client',
@@ -40,6 +41,13 @@ export class User extends CoreEntity {
   @Column({ enum: UserRole, type: 'enum' })
   @Field((type) => UserRole)
   role: UserRole;
+
+  @Field((type) => [Restaurant])
+  @OneToMany((type) => Restaurant, (restaurant) => restaurant.owner, {
+    onDelete: 'CASCADE',
+    nullable: true,
+  })
+  restaurants: Restaurant[];
 
   @BeforeInsert()
   @BeforeUpdate()

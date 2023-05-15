@@ -31,17 +31,13 @@ export class EmailService {
     formData.append('template', template);
     vars?.forEach((v) => formData.append(`v:${v.key}`, v.value));
 
-    const res = await fetch(
-      `${this.baseURL}/${this.config.get(MAIL_DOMAIN)}/messages`,
-      {
-        method: 'POST',
-        headers: {
-          ...this.headerOption,
-        },
-        body: formData,
+    await fetch(`${this.baseURL}/${this.config.get(MAIL_DOMAIN)}/messages`, {
+      method: 'POST',
+      headers: {
+        ...this.headerOption,
       },
-    );
-    console.log(res);
+      body: formData,
+    });
   }
 
   async verifyEmail({ to, code }: MailVerifyOption): Promise<void> {

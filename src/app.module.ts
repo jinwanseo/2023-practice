@@ -17,6 +17,9 @@ import { EmailModule } from './email/email.module';
 import { JwtModule } from './jwt/jwt.module';
 import { JwtMiddleware } from './jwt/jwt.middleware';
 import { AuthModule } from './auth/auth.module';
+import { RestaurantsModule } from './restaurants/restaurants.module';
+import { Category } from './restaurants/entities/category.entity';
+import { Restaurant } from './restaurants/entities/restaurant.entity';
 
 @Module({
   imports: [
@@ -43,7 +46,7 @@ import { AuthModule } from './auth/auth.module';
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [User, Verification],
+      entities: [User, Verification, Category, Restaurant],
       synchronize: true,
       logging: true,
     }),
@@ -57,6 +60,7 @@ import { AuthModule } from './auth/auth.module';
     EmailModule,
     JwtModule,
     AuthModule,
+    RestaurantsModule,
   ],
   controllers: [],
   providers: [],
