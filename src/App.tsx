@@ -1,25 +1,19 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Article from "./components/layout/Article";
+import Header from "./components/layout/Header";
+import Sidebar from "./components/layout/Sidebar";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <section className="grid grid-row justify-center w-screen h-screen bg-gradient-to-tr from-slate-950/90 via-sky-950 to-cyan-950 from-60% text-slate-50/60">
+      <section className="container grid grid-cols-12 grid-rows-12">
+        {/* 헤더 */}
+        <Header />
+        {/* 사이드바 */}
+        <Sidebar />
+        {/* 컨텐츠 */}
+        <Article />
+      </section>
+    </section>
   );
 }
 
