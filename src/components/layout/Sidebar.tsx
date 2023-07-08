@@ -6,11 +6,11 @@ function Sidebar() {
   return (
     <aside
       className="
-     col-start-1
-     col-end-3
-     row-start-2
-     row-end-7
-     w-[300px] flex flex-col gap-9 p-9 font-light overflow-y-auto"
+      col-start-1
+      col-end-4
+      row-start-1
+      row-end-7
+      flex flex-col gap-9 p-9 font-light overflow-y-auto"
     >
       {/* 빠른 검색 */}
       <QuickBtn />

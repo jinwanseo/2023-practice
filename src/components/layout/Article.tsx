@@ -2,10 +2,10 @@ function Article() {
   return (
     <article
       className="
-     col-start-5
-     col-end-13
-    row-start-2
-    row-end-7
+      col-start-5
+      col-end-13
+      row-start-1
+      row-end-7
      overflow-y-auto"
     >
       Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae,
