@@ -1,4 +1,4 @@
-import { Stack } from "@mui/joy";
+import { Button, Grid, Stack } from "@mui/joy";
 import RHFInput from "components/forms/RHFInput";
 import RHFSubmit from "components/forms/RHFSubmit";
 import RHForm from "components/forms/RHForm";
@@ -14,6 +14,7 @@ import RHFSelectGroup from "components/forms/RHFSelectGroup";
 import RHFTextArea from "components/forms/RHFTextArea";
 import RHFDrop from "components/forms/RHFDrop";
 import RHFRadio from "components/forms/RHFRadio";
+import useLoading from "app/hooks/useLoading";
 
 const PlaygroundSchema = Yup.object().shape({
   userId: Yup.string()
@@ -66,101 +67,108 @@ const PlaygroundSchema = Yup.object().shape({
 });
 
 function Playground() {
+  const { setLoading } = useLoading();
   const methods = useForm({
     mode: "onChange",
     resolver: yupResolver(PlaygroundSchema),
-    defaultValues: {
-      userId: "jinwanseo",
-      // group: 1,
-      startDate: "2023-10-10",
-      endDate: "2023-10-10",
-      start: "2022-10-10",
-      drop: 10,
-      radio: 1,
-      // end: "2023-10-10",
-    },
+    defaultValues: {},
   });
-  const { handleSubmit, watch } = methods;
+  const { handleSubmit } = methods;
   const handlers = {
     onSubmit: (data: any) => {
       console.log(data);
+    },
+    handleLoading: (): void => {
+      setLoading();
     },
   };
 
   return (
     <Stack>
       <RHForm methods={methods} onSubmit={handleSubmit(handlers.onSubmit)}>
-        <Stack spacing={2}>
-          <RHFInput
-            startDecorator={<PermIdentity fontSize="small" />}
-            name="userId"
-            endPoint
-          />
-          <RHFInput
-            startDecorator={<PermIdentity fontSize="small" />}
-            name="userPwd"
-            endPoint
-          />
+        <Grid container spacing={2}>
+          <Grid xs={6} md={4}>
+            <RHFInput
+              startDecorator={<PermIdentity fontSize="small" />}
+              name="userId"
+              endPoint
+            />
+          </Grid>
+          <Grid xs={6} md={4}>
+            <RHFInput
+              startDecorator={<PermIdentity fontSize="small" />}
+              name="userPwd"
+              endPoint
+            />
+          </Grid>
+          <Grid xs={6} md={4}>
+            <RHFSelect
+              name="drop"
+              options={[
+                { label: "개발팀", value: 1 },
+                { label: "운영팀", value: 2 },
+              ]}
+              endPoint
+            />
+          </Grid>
+          <Grid xs={6} md={4}>
+            <RHFDate name="start" endPoint />
+          </Grid>
+          <Grid xs={6} md={4}>
+            <RHFDate name="end" endPoint />
+          </Grid>
+          <Grid xs={6} md={4}>
+            <RHFBtnGroup
+              name="group"
+              options={[
+                { label: "옵션1", value: 1 },
+                { label: "옵션2", value: 2 },
+                { label: "옵션3", value: 3 },
+              ]}
+              endPoint
+            />
+          </Grid>
+          <Grid xs={6} md={4}>
+            <RHFSelectGroup
+              name="groupMulti"
+              options={[
+                { label: "일별", value: 1 },
+                { label: "주별", value: 2 },
+                { label: "월별", value: 3 },
+              ]}
+              endPoint
+            />
+          </Grid>
+          <Grid xs={6} md={4}>
+            <RHFDrop
+              name="drop"
+              options={[
+                { label: "10", value: 10 },
+                { label: "20", value: 20 },
+                { label: "30", value: 30 },
+              ]}
+              endPoint
+            />
+          </Grid>
+          <Grid xs={6} md={4}>
+            <RHFTextArea name="textarea" endPoint />
+          </Grid>
+          <Grid xs={6} md={4}>
+            <RHFRadio
+              name="radio"
+              options={[
+                { label: "label1", value: 1 },
+                { label: "label2", value: 2 },
+                { label: "label3", value: 3 },
+              ]}
+              endPoint
+            />
+          </Grid>
+        </Grid>
 
-          <RHFSelect
-            name="drop"
-            options={[
-              { label: "개발팀", value: 1 },
-              { label: "운영팀", value: 2 },
-            ]}
-            endPoint
-          />
+        <Button onClick={handlers.handleLoading}>loading bar</Button>
 
-          <RHFDate name="startDate" endPoint />
-          <RHFDate name="endDate" endPoint />
-
-          <RHFDate name="start" endPoint />
-          <RHFDate name="end" endPoint />
-
-          <RHFBtnGroup
-            name="group"
-            options={[
-              { label: "옵션1", value: 1 },
-              { label: "옵션2", value: 2 },
-              { label: "옵션3", value: 3 },
-            ]}
-            endPoint
-          />
-
-          <RHFSelectGroup
-            name="groupMulti"
-            options={[
-              { label: "일별", value: 1 },
-              { label: "주별", value: 2 },
-              { label: "월별", value: 3 },
-            ]}
-            endPoint
-          />
-
-          <RHFDrop
-            name="drop"
-            options={[
-              { label: "10", value: 10 },
-              { label: "20", value: 20 },
-              { label: "30", value: 30 },
-            ]}
-            endPoint
-          />
-
-          <RHFTextArea name="textarea" endPoint />
-
-          <RHFRadio
-            name="radio"
-            options={[
-              { label: "label1", value: 1 },
-              { label: "label2", value: 2 },
-              { label: "label3", value: 3 },
-            ]}
-            endPoint
-          />
-
-          <RHFSubmit label="유효성검증" endIcon={<Check />} />
-        </Stack>
+        <RHFSubmit label="유효성검증" endIcon={<Check />} />
       </RHForm>
     </Stack>
   );

@@ -2,25 +2,24 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 export interface StyleSliceType {
-  value: number;
+  loading: boolean;
 }
 
 const initialState = {
-  value: sessionStorage.getItem("value") ?? 0,
+  loading: false,
 } as StyleSliceType;
 
 export const styleSlice = createSlice({
   name: "style",
   initialState,
   reducers: {
-    setStoreValue: (state, action: PayloadAction<number>) => {
-      sessionStorage.setItem("value", JSON.stringify(action.payload));
-      state.value = action.payload;
+    setLoadingState: (state, action: PayloadAction<boolean>) => {
+      state.loading = action.payload;
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setStoreValue } = styleSlice.actions;
+export const { setLoadingState } = styleSlice.actions;
 
 export default styleSlice.reducer;
