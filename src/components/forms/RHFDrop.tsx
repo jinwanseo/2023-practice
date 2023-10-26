@@ -41,7 +41,7 @@ function RHFDrop({ name, options, onChange, endPoint }: RHFInputType<any>) {
           <Select
             {...(!!error?.message && { color: "danger" })}
             // {...field}
-            value={field?.value ?? null}
+            defaultValue={field?.value ?? null}
             {...(!!field?.value && !error?.message && { color: "success" })}
             size="sm"
             indicator={<KeyboardArrowDown />}

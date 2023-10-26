@@ -13,6 +13,7 @@ import RHFBtnGroup from "components/forms/RHFBtnGroup";
 import RHFSelectGroup from "components/forms/RHFSelectGroup";
 import RHFTextArea from "components/forms/RHFTextArea";
 import RHFDrop from "components/forms/RHFDrop";
+import RHFRadio from "components/forms/RHFRadio";
 
 const PlaygroundSchema = Yup.object().shape({
   userId: Yup.string()
@@ -60,6 +61,8 @@ const PlaygroundSchema = Yup.object().shape({
     .min(5, "최소 5글자 이상 입력")
     .max(10, "최대 10글자 미만 입력")
     .required("필수 입력 항목"),
+
+  radio: Yup.number().required("필수 입력 항목"),
 });
 
 function Playground() {
@@ -73,6 +76,7 @@ function Playground() {
       endDate: "2023-10-10",
       start: "2022-10-10",
       drop: 10,
+      radio: 1,
       // end: "2023-10-10",
     },
   });
@@ -144,6 +148,16 @@ function Playground() {
           />
 
           <RHFTextArea name="textarea" endPoint />
+
+          <RHFRadio
+            name="radio"
+            options={[
+              { label: "label1", value: 1 },
+              { label: "label2", value: 2 },
+              { label: "label3", value: 3 },
+            ]}
+            endPoint
+          />
 
           <RHFSubmit label="유효성검증" endIcon={<Check />} />
         </Stack>
