@@ -36,7 +36,6 @@ const PlaygroundSchema = Yup.object().shape({
     .required("필수 입력 항목"),
   start: Yup.string()
     .typeError("날짜 형식으로 입력해주세요")
-
     .when("end", (endDate, schema) => {
       return schema.test({
         test: (startDate) => {
@@ -73,7 +72,7 @@ function Playground() {
       startDate: "2023-10-10",
       endDate: "2023-10-10",
       start: "2022-10-10",
-      // drop: 10,
+      drop: 10,
       // end: "2023-10-10",
     },
   });
