@@ -7,10 +7,14 @@ from sqlalchemy.orm import Session
 
 app = APIRouter(prefix='/user')
 
-@app.post('/user/create')
+@app.post('/create')
 def createUser(user: CreateUserInput, db: Session = Depends(get_db)):
     return userService.createUser(user, db)
 
-@app.get('/user/profile')
+@app.get('/profile')
 def getProfileByUserName(username: str, db:Session = Depends(get_db)):
     return userService.getByUsername(username, db)
+
+@app.get('/profile/{userId}')
+def getProfile(userId: int, db:Session = Depends(get_db)):
+    return userService.getById(userId, db)
