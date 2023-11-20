@@ -6,6 +6,13 @@ from common.database.db import get_db
 
 app = APIRouter(prefix="/board")
 
-@app.post('/create')
-def createBoard(board: CreateBoardInput, db: Session = Depends(get_db)):
-    return boardService.createBoard(board, db)
+
+@app.post("/create")
+def create_board(
+    board: CreateBoardInput,
+    db: Session = Depends(get_db),
+):
+    return boardService.createBoard(
+        board,
+        db,
+    )
