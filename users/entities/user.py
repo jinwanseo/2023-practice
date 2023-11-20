@@ -9,21 +9,21 @@ from common.entities.core_entity import CoreEntity
 class User(Base, CoreEntity):
     __tablename__ = "users"
     username = Column(
-        type=String,
+        String,
         unique=True,
         index=True,
     )
     password = deferred(
         Column(
-            type=String,
+            String,
         ),
     )
     age = Column(
-        type=Integer,
+        Integer,
         nullable=True,
     )
     email = Column(
-        type=String,
+        String,
         unique=True,
         nullable=True,
     )
