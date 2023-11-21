@@ -1,45 +1,123 @@
 from users.dtos.create_user import CreateUserInput
 from sqlalchemy import or_, and_
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, undefer
 from users.entities.user import User
-from fastapi import HTTPException
+from fastapi import HTTPException, Response
 from users.dtos.read_users import ReadUsersInput
 from users.dtos.update_user import UpdateUserInput
+from users.dtos.delete_user import DeleteUserInput
 
 
 # 유저 생성
-def create_user(user: CreateUserInput, db: Session):
+def create(createUserInput: CreateUserInput, db: Session):
+    exist = get_or_none_by_arr(
+        db,
+        createUserInput,
+        ["email", "username"],
+    )
+
+    if exist != None:
+        raise HTTPException(status_code=400, detail="유저 이름 / 이메일 중복")
+
+    new_user = User(
+        username=createUserInput.username,
+        age=createUserInput.age,
+        email=createUserInput.email,
+    )
+
+    new_user.hashPw(createUserInput.password)
+
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+
+    return {"ok": True}
+
+
+def update(user_id: int, updateUserInput: UpdateUserInput, db: Session):
+    user: User = get_by_id(user_id, db, True)
+
+    if user is None:
+        raise HTTPException(status_code=404, detail="유저 정보가 없음")
+
+    data = {
+        "username": updateUserInput.username,
+        "age": updateUserInput.age,
+        "email": updateUserInput.email,
+        "password": updateUserInput.password,
+    }
+
+    for key, value in data.items():
+        if value != None and key != "password":
+            setattr(user, key, value)
+
+    if data["password"]:
+        user.hashPw(data["password"])
+
+    db.commit()
+    db.refresh(user)
+
+    return {"ok": True}
+
+
+def delete(deleteUserInput: DeleteUserInput, db: Session):
+    user = get_by_id(deleteUserInput.user_id, db)
+    if user is None:
+        raise HTTPException(
+            status_code=404,
+            detail="삭제할 유저 조회 실패",
+        )
     try:
-        newUser = User(
-            username=user.username,
-            age=user.age,
-            email=user.email,
+        db.delete(user)
+        db.commit()
+        return {
+            "ok": True,
+        }
+    except:
+        raise HTTPException(
+            status_code=500,
+            detail="삭제 실패",
         )
 
-        db.add(newUser)
-        db.commit()
-        db.refresh(newUser)
 
-        return {"ok": True}
+def filter_by(readUsersInput: ReadUsersInput, db: Session):
+    query = db.query(User)
 
-    except Exception as e:
-        db.rollback()
-        return {"ok": False, "error": str(e)}
+    # 키워드
+    if readUsersInput.keyword:
+        query = query.filter(
+            or_(
+                User.username.ilike(f"%{readUsersInput.keyword}%"),
+                User.email.ilike(f"%{readUsersInput.keyword}%"),
+            )
+        )
+
+    # 날짜
+    if readUsersInput.start_date and readUsersInput.end_date:
+        query = query.filter(
+            and_(
+                User.updated_at >= readUsersInput.start_date,
+                User.updated_at <= readUsersInput.end_date,
+            )
+        )
+
+    results = query.all()
+    return {"ok": True, "reuslts": results}
 
 
-# 유저 프로필 조회 (username)
+def get_or_none_by_arr(db, input_data, attrs):
+    filters = [getattr(User, attr) == getattr(input_data, attr) for attr in attrs]
+    return db.query(User).filter(or_(*filters)).one_or_none()
+
+
 def get_by_name(username: str, db: Session):
-    try:
-        user = db.query(User).filter(User.username.contains(username)).one()
-        return {"ok": True, "result": user}
-    except Exception as e:
-        return {"ok": False, "error": str(e)}
+    return db.query(User).filter(User.username.ilike(f"%{username}%")).one_or_none()
 
 
-# 유저 프로필 조회 (id)
-def get_by_id(userId: int, db: Session):
-    try:
-        user = db.query(User).filter(User.id == userId).one()
-        return {"ok": True, "result": user}
-    except Exception as e:
-        return {"ok": False, "error": str(e)}
+def get_by_id(user_id: int, db: Session, importPw: bool = False):
+    query = db.query(User)
+    if importPw:
+        query = query.options(undefer(User.password))
+    return (
+        query.options(undefer(User.password)).filter(User.id == user_id).one_or_none()
+    )

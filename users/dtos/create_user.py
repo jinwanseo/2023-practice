@@ -1,6 +1,6 @@
 import re
 from pydantic import BaseModel, validator, EmailStr, model_validator
-from fastapi.responses import JSONResponse
+from fastapi import HTTPException
 
 
 class CreateUserInput(BaseModel):
@@ -13,12 +13,9 @@ class CreateUserInput(BaseModel):
     @validator("username", "password")
     def validate_length(cls, value: str):
         if len(value) < 3 or len(value) > 10:
-            raise JSONResponse(
+            raise HTTPException(
                 status_code=400,
-                content={
-                    "ok": False,
-                    "error": "3글자 이상 10글자 미만",
-                },
+                detail="3글자 이상 10글자 미만",
             )
         return value
 
@@ -28,36 +25,27 @@ class CreateUserInput(BaseModel):
             return value
         # 비밀번호에 최소 1개 이상의 특수 문자를 포함하는지 확인
         if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", value):
-            raise JSONResponse(
+            raise HTTPException(
                 status_code=400,
-                content={
-                    "ok": False,
-                    "error": "비밀번호는 최소 1개 이상의 특수 문자를 포함해야 합니다.",
-                },
+                detail="비밀번호는 최소 1개 이상의 특수 문자를 포함해야 합니다.",
             )
         return value
 
     @validator("age")
     def validate_age(cls, value: int):
         if value < 0 or value > 130:
-            raise JSONResponse(
+            raise HTTPException(
                 status_code=400,
-                content={
-                    "ok": False,
-                    "error": "유효한 age 값 입력 요망",
-                },
+                detail="유효한 age 값 입력 요망",
             )
         return value
 
     @model_validator(mode="after")
     def validate_model(cls, values):
         if values.password != values.confirm_password:
-            raise JSONResponse(
+            raise HTTPException(
                 status_code=400,
-                content={
-                    "ok": False,
-                    "error": "password, confirm_password 다름",
-                },
+                detail="password, confirm_password 다름",
             )
 
         return values

@@ -13,32 +13,31 @@ class User(Base, CoreEntity):
         unique=True,
         index=True,
     )
+
     password = deferred(
         Column(
             String,
         ),
     )
+
     age = Column(
         Integer,
         nullable=True,
     )
+
     email = Column(
         String,
         unique=True,
         nullable=True,
     )
-    boards = relationship(
-        "Board",
-        back_populates="author",
-    )
 
-    def set_password(self, password: str):
+    def hashPw(self, password: str):
         self.password = bcrypt.hashpw(
             password=password.encode("utf-8"),
             salt=bcrypt.gensalt(),
         )
 
-    def check_password(self, password: str):
+    def checkPw(self, password: str):
         return bcrypt.checkpw(
             password=password.encode("utf-8"),
             hashed_password=self.password,

@@ -5,38 +5,33 @@ from users.dtos.create_user import CreateUserInput
 from sqlalchemy.orm import Session
 from users.dtos.read_users import ReadUsersInput
 from users.dtos.update_user import UpdateUserInput
+from users.dtos.delete_user import DeleteUserInput
 
 app = APIRouter(prefix="/user")
 
 
 @app.post("/create")
-def createUser(
+def create(
     user: CreateUserInput,
     db: Session = Depends(get_db),
 ):
-    return userService.create_user(
-        user,
-        db,
-    )
+    return userService.create(user, db)
 
 
-@app.get("/profile")
-def getProfileByUserName(
-    username: str,
+@app.patch("/update/{uesrId}")
+def update(
+    uesr_id: int,
+    updateUserInput: UpdateUserInput,
     db: Session = Depends(get_db),
 ):
-    return userService.get_by_name(
-        username,
-        db,
-    )
+    return userService.update(uesr_id, updateUserInput, db)
 
 
-@app.get("/profile/{userId}")
-def getProfile(
-    userId: int,
-    db: Session = Depends(get_db),
-):
-    return userService.get_by_id(
-        userId,
-        db,
-    )
+@app.delete("/delete")
+def delete(deleteUserInput: DeleteUserInput, db: Session = Depends(get_db)):
+    return userService.delete(deleteUserInput, db)
+
+
+@app.post("/list")
+def reads(readUsersInput: ReadUsersInput, db: Session = Depends(get_db)):
+    return userService.filter_by(readUsersInput, db)
