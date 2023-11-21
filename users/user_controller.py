@@ -7,10 +7,13 @@ from users.dtos.read_users import ReadUsersInput
 from users.dtos.update_user import UpdateUserInput
 from users.dtos.delete_user import DeleteUserInput
 
-app = APIRouter(prefix="/user")
+app = APIRouter(
+    prefix="/user",
+    tags=["유저 관리"],
+)
 
 
-@app.post("/create")
+@app.post("/create", summary="유저 생성", description="유저 생성 API")
 def create(
     user: CreateUserInput,
     db: Session = Depends(get_db),
@@ -18,7 +21,7 @@ def create(
     return userService.create(user, db)
 
 
-@app.patch("/update/{uesrId}")
+@app.patch("/update/{uesrId}", summary="유저 수정", description="유저 수정 API")
 def update(
     uesr_id: int,
     updateUserInput: UpdateUserInput,
@@ -27,11 +30,11 @@ def update(
     return userService.update(uesr_id, updateUserInput, db)
 
 
-@app.delete("/delete")
+@app.delete("/delete", summary="유저 삭제", description="유저 정보 삭제 API")
 def delete(deleteUserInput: DeleteUserInput, db: Session = Depends(get_db)):
     return userService.delete(deleteUserInput, db)
 
 
-@app.post("/list")
+@app.post("/list", summary="유저 리스트", description="유저 리스트 API")
 def reads(readUsersInput: ReadUsersInput, db: Session = Depends(get_db)):
     return userService.filter_by(readUsersInput, db)
