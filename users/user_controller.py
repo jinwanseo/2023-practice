@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Depends
 from users import user_service as userService
 from common.database.db import get_db
-from users.dtos.create_user_dto import CreateUserInput
+from users.dtos.create_user import CreateUserInput
 from sqlalchemy.orm import Session
+from users.dtos.read_users import ReadUsersInput
+from users.dtos.update_user import UpdateUserInput
 
 app = APIRouter(prefix="/user")
 
