@@ -20,16 +20,17 @@ def create(createUserInput: CreateUserInput, db: Session):
         raise HTTPException(status_code=400, detail="유저 이름 / 이메일 중복")
 
     new_user = User(
-        username=createUserInput.username,
-        age=createUserInput.age,
-        email=createUserInput.email,
+        **createUserInput.dict(exclude_unset=True, exclude={"confirm_password"})
+        # username=createUserInput.username,
+        # age=createUserInput.age,
+        # email=createUserInput.email,
     )
 
     new_user.hashPw(createUserInput.password)
 
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
+    # db.add(new_user)
+    # db.commit()
+    # db.refresh(new_user)
 
     return {"ok": True}
 
@@ -105,6 +106,7 @@ def filter_by(readUsersInput: ReadUsersInput, db: Session):
     return {"ok": True, "reuslts": results}
 
 
+# attrs 를 입력 받고 해당 항목 중복 체크
 def get_or_none_by_arr(db, input_data, attrs):
     filters = [getattr(User, attr) == getattr(input_data, attr) for attr in attrs]
     return db.query(User).filter(or_(*filters)).one_or_none()
@@ -114,6 +116,7 @@ def get_by_name(username: str, db: Session):
     return db.query(User).filter(User.username.ilike(f"%{username}%")).one_or_none()
 
 
+# id 로 유저를 검색하되 password 포함 포함 여부
 def get_by_id(user_id: int, db: Session, importPw: bool = False):
     query = db.query(User)
     if importPw:
