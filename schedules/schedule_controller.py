@@ -1,7 +1,14 @@
 from fastapi import APIRouter
 from schedules.utils.celery_config import schedule_task_item
+from scheduler.schedule_service import (
+    start_scheduler,
+    pause_scheduler,
+    remove_scheduler,
+)
+from datetime import datetime
 
-app = APIRouter(prefix="/schedules", tags=["스케쥴 관리"])
+# 셀러리로 동작하는 Schedules
+app = APIRouter(prefix="/schedules", tags=["스케쥴 관리 (Celery)"])
 
 
 @app.get("/work")

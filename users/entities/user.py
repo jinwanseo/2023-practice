@@ -1,6 +1,5 @@
 from sqlalchemy import Column, String, Integer, Boolean, DateTime, ForeignKey
-from datetime import datetime
-from sqlalchemy.orm import deferred, relationship
+from sqlalchemy.orm import deferred
 import bcrypt
 from common.database.db import Base
 from common.entities.core_entity import CoreEntity

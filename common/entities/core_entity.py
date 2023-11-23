@@ -1,4 +1,4 @@
-from sqlalchemy import Column, DateTime, Integer, func
+from sqlalchemy import Column, DateTime, Integer
 from datetime import datetime
 
 
