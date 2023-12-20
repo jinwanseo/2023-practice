@@ -5,6 +5,7 @@ import com.rainbow.user.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +24,8 @@ public class Work extends CoreEntity {
     @Schema(name = "업무 할당 유저 목록")
     @OneToMany(mappedBy = "work")
     private List<User> users = new ArrayList<>();
-    @Schema(name = "할당 멉무 목록")
-    @OneToMany(mappedBy = "work")
-    private List<Task> tasks = new ArrayList<>();
+
+    @Schema(name = "할당 멉무")
+    @OneToOne(mappedBy = "work")
+    private Task task;
 }

@@ -8,7 +8,6 @@ import com.rainbow.team.entity.Team;
 import com.rainbow.team.entity.TeamLevel;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.PersistenceException;
 import jakarta.persistence.PessimisticLockException;
 import jakarta.transaction.Transactional;
 import java.util.List;
@@ -16,8 +15,14 @@ import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.opentest4j.AssertionFailedError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.dao.PessimisticLockingFailureException;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
+import org.springframework.orm.jpa.JpaSystemException;
 
 /**
  * 개발 서버 테스트 (DB 환경 동일)
@@ -58,11 +63,10 @@ class DbTeamRepositoryTest {
             Optional.empty()
         );
         this.teamRepository.create(createTeamInput);
-
+        createTeamInput.setOrder(2);
         assertThrows(
-            EntityExistsException.class,
-            () -> this.teamRepository.create(createTeamInput),
-            "같은 이름의 부서가 있어요."
+            DataIntegrityViolationException.class,
+            () -> this.teamRepository.create(createTeamInput)
         );
     }
 
@@ -77,7 +81,7 @@ class DbTeamRepositoryTest {
         );
 
         assertThrows(
-            PersistenceException.class,
+            JpaSystemException.class,
             () -> this.teamRepository.create(createTeamInput),
             "하위 부서는 상위 부서를 꼭 선택해야해요."
         );
@@ -94,7 +98,7 @@ class DbTeamRepositoryTest {
         );
 
         assertThrows(
-            EntityNotFoundException.class,
+            JpaObjectRetrievalFailureException.class,
             () -> this.teamRepository.create(createTeamInput),
             "상위 부서가 없어요. 다시 확인해주세요"
         );
@@ -111,7 +115,7 @@ class DbTeamRepositoryTest {
         );
 
         assertThrows(
-            PersistenceException.class,
+            JpaSystemException.class,
             () -> this.teamRepository.create(createTeamInput)
         );
 
@@ -196,7 +200,7 @@ class DbTeamRepositoryTest {
 
         // 부서 목록 생성
         for (int i = 0; i < 10; i++) {
-            Team team = this.teamRepository.create(
+            this.teamRepository.create(
                 new CreateTeamInput(
                     "sample" + i,
                     i,
@@ -208,7 +212,7 @@ class DbTeamRepositoryTest {
 
         // 상위 부서 삭제 시도
         assertThrows(
-            PessimisticLockException.class,
+            PessimisticLockingFailureException.class,
             () -> this.teamRepository.delete(rootTeam.getId()),
             "하위 부서를 가진 상위 부서는 삭제가 불가해요"
         );

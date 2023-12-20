@@ -11,19 +11,16 @@ import com.rainbow.user.dto.UpdateUserInput;
 import com.rainbow.user.entity.RoleType;
 import com.rainbow.user.entity.User;
 import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
-import org.aspectj.lang.annotation.Before;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 
 
 @SpringBootTest
@@ -55,7 +52,9 @@ class DbUserRepositoryTest {
         CreateUserInput createUserInput = getCreateUserInput();
         getCreateUser(createUserInput);
 
-        assertThrows(EntityExistsException.class,
+        // when, then
+        assertThrows(
+            DataIntegrityViolationException.class,
             () -> getCreateUser(createUserInput)
         );
     }
@@ -108,7 +107,7 @@ class DbUserRepositoryTest {
 
         // 중복 에러 출력
         assertThrows(
-            EntityExistsException.class,
+            DataIntegrityViolationException.class,
             () -> this.userRepository.update(user.getId(), updateUserInput)
         );
     }
@@ -128,7 +127,7 @@ class DbUserRepositoryTest {
     @Test
     @DisplayName("유저 삭제 : 실패 (Id 조회 실패)")
     void deleteUserByIdFailed() {
-        assertThrows(EntityNotFoundException.class,
+        assertThrows(JpaObjectRetrievalFailureException.class,
             () -> this.userRepository.delete(21237123712938L));
     }
 

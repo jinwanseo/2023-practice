@@ -16,7 +16,9 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class DbTeamRepository implements TeamRepository {
 
     private final EntityManager entityManager;
@@ -28,16 +30,16 @@ public class DbTeamRepository implements TeamRepository {
 
     @Override
     public Team create(CreateTeamInput createTeamInput) {
-        this.findByName(createTeamInput.getName()).ifPresent(
-            u -> {
-                throw new EntityExistsException("같은 이름의 부서가 있어요.");
-            }
-        );
+        this.findByName(createTeamInput.getName())
+            .ifPresent(
+                u -> {
+                    throw new EntityExistsException("같은 이름의 부서가 있어요.");
+                }
+            );
 
         Team team = new Team();
         team.setOrder(createTeamInput.getOrder());
         team.setName(createTeamInput.getName());
-
         // NODE 부서 일시
         if (createTeamInput.getLevel() == TeamLevel.NODE) {
             // 상위 부서 Id 검사
@@ -127,6 +129,7 @@ public class DbTeamRepository implements TeamRepository {
     public Optional<Team> findByName(String name) {
         return this.entityManager.createQuery("SELECT t FROM Team AS t WHERE name=:name",
             Team.class).setParameter("name", name).getResultStream().findAny();
+
     }
 
     @Override

@@ -40,10 +40,6 @@ public class User extends CoreEntity {
     @JoinColumn(name = "team_id")
     private Team team;
 
-    @ManyToOne
-    @JoinColumn(name = "work_id")
-    private Work work;
-
     public User(CreateUserInput createUserInput) {
         this.name = createUserInput.getName();
         this.email = createUserInput.getEmail();
