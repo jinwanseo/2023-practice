@@ -78,7 +78,6 @@ public class ProxyBotRepository implements BotRepository {
     public List<RpaScript> getRpaScriptList() {
         if (this.accessToken == null) {
             this.accessToken = this.login();
-            System.out.println("토큰 발행 완료");
         }
 
         String url = this.baseUrl + "/v2/repository/workspaces/public/files/list";

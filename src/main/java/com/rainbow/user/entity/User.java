@@ -1,7 +1,6 @@
 package com.rainbow.user.entity;
 
 import com.rainbow.common.entity.CoreEntity;
-import com.rainbow.task.entity.Work;
 import com.rainbow.team.entity.Team;
 import com.rainbow.user.dto.CreateUserInput;
 import jakarta.persistence.*;

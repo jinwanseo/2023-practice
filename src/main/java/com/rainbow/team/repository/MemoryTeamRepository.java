@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class MemoryTeamRepository implements TeamRepository {
 
-    Map<Long, Team> teams = new ConcurrentHashMap<>();
+    private final Map<Long, Team> teams = new ConcurrentHashMap<>();
 
     @Override
     public Team create(CreateTeamInput createTeamInput) {
@@ -138,7 +138,7 @@ public class MemoryTeamRepository implements TeamRepository {
         this.teams.remove(id);
         return team.get();
     }
-    
+
     @Override
     public List<Team> findTeamsByFilter(FilterTeamInput filterTeamInput) {
         String keyword = filterTeamInput.getKeyword().orElse("").toLowerCase();

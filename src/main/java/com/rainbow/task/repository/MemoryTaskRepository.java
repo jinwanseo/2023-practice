@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class MemoryTaskRepository implements TaskRepository {
 
-    private Map<Long, Task> tasks = new ConcurrentHashMap<>();
+    private final Map<Long, Task> tasks = new ConcurrentHashMap<>();
 
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
@@ -31,8 +31,8 @@ public class MemoryTaskRepository implements TaskRepository {
         TeamRepository teamRepository,
         BotRepository botRepository
     ) {
-        this.teamRepository = teamRepository;
         this.userRepository = userRepository;
+        this.teamRepository = teamRepository;
         this.botRepository = botRepository;
     }
 
@@ -85,23 +85,34 @@ public class MemoryTaskRepository implements TaskRepository {
 
     @Override
     public Task update(Long id, UpdateTaskInput updateTaskInput) {
-        // Task 확인
+        // 1. Task 확인
         Optional<Task> searchTask = this.getById(id);
         if (searchTask.isEmpty()) {
             throw new EntityNotFoundException("수정할 과제를 찾지 못했어요");
         }
         Task task = searchTask.get();
-        // 이름 중복 확인
+        // 2. 이름 중복 확인
         updateTaskInput.getTitle().flatMap(this::getByTitle).ifPresent(t -> {
             throw new EntityExistsException("같은 이름의 과제가 있어요");
         });
+
+        // 3. RpaScriptId 검증
+        updateTaskInput.getRpaScriptId().ifPresent(
+            rpaScriptId -> {
+                Boolean checkedRpaScriptIsValid = this.botRepository.checkRpaScriptById(
+                    rpaScriptId);
+                if (!checkedRpaScriptIsValid) {
+                    throw new EntityNotFoundException("Rpa Script를 찾을수 없어요");
+                }
+            }
+        );
 
         updateTaskInput.getTitle().ifPresent(task::setTitle);
         updateTaskInput.getUseYn().ifPresent(task::setUseYn);
         updateTaskInput.getRpaScriptId().ifPresent(task::setRpaScriptId);
         updateTaskInput.getOrder().ifPresent(task::setOrder);
 
-        // team 설정
+        // 3. team 설정
         updateTaskInput.getTeamId().ifPresent(
             teamId -> {
                 Optional<Team> searchTeam = this.teamRepository.findById(teamId);
@@ -112,7 +123,7 @@ public class MemoryTaskRepository implements TaskRepository {
             }
         );
 
-        // 유저 설정
+        // 4. 유저 설정
         updateTaskInput.getManagerPkList().ifPresent(list -> {
             List<User> users = new ArrayList<>();
             for (Long userId : list) {
@@ -122,7 +133,6 @@ public class MemoryTaskRepository implements TaskRepository {
                 }
                 users.add(searchUser.get());
             }
-            // Work User 리스트 업데이트
             task.setManagers(users);
         });
 
