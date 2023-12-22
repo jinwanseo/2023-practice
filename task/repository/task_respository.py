@@ -16,11 +16,9 @@ class TaskRepository:
 
     def find_filter_list(self, filter_task_input: FilterTaskInput):
         query = self.db.query(Task)
-        if filter_task_input.name:
-            query = query.filter(Task.name == filter_task_input.name)
-        if filter_task_input.email:
-            query = query.filter(Task.email == filter_task_input.email)
-
+        query = query.filter(Task.title.contains(filter_task_input.keyword))
+        query = query.filter(Task.description.contains(filter_task_input.keyword))
+        query = query.filter(Task.keyword.contains(filter_task_input.keyword))
         return query.get_all()
 
     def create(self, task: Task) -> Task:

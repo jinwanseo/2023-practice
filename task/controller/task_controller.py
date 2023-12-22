@@ -8,6 +8,7 @@ from starlette import status
 from fast_config import get_task_service
 from task.dto.create_task_input import CreateTaskInput
 from task.dto.delete_task_input import DeleteTaskInput
+from task.dto.deploy_task_input import DeployTaskInput
 from task.dto.filter_task_input import FilterTaskInput
 from task.dto.update_task_input import UpdateTaskInput
 from task.service.task_service import TaskService
@@ -85,4 +86,11 @@ class TaskController:
         tasks = self.task_service.find_task_by_filter(filter_task_input)
         return JSONResponse(
             status_code=status.HTTP_200_OK, content=jsonable_encoder(tasks)
+        )
+
+    @task_router.post("/deploy/{task_id}", summary="과제 배포", description="과제 배포 요청 API")
+    def deploy_task(self, task_id: int, deploy_task_input: DeployTaskInput):
+        self.task_service.set_schedule_deploy_yn(task_id, deploy_task_input.deploy_yn)
+        return JSONResponse(
+            status_code=status.HTTP_200_OK, content=jsonable_encoder(deploy_task_input)
         )
