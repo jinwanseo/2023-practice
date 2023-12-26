@@ -1,6 +1,8 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 
 class FilterUserInput(BaseModel):
-    name: str
-    email: str
+    name: Optional[str] = None
+    email: Optional[str] = None

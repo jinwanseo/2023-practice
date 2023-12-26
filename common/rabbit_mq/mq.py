@@ -6,7 +6,7 @@ from common.config import MQ_HOST, MQ_USER, MQ_PASS, MQ_PORT
 connectionParameters = pika.ConnectionParameters(
     host=MQ_HOST,
     port=MQ_PORT,
-    virtual_host="rgqpxtwv",
+    virtual_host=MQ_USER,
     credentials=pika.PlainCredentials(
         username=MQ_USER,
         password=MQ_PASS,
@@ -15,7 +15,7 @@ connectionParameters = pika.ConnectionParameters(
 
 # RabbitMQ 연결
 connection = pika.BlockingConnection(connectionParameters)
-channel = connection.channel()
+# channel = connection.channel()
 
 # 큐 선언
-queue_name = "jw_queue"
+# queue_name = "jw_queue"

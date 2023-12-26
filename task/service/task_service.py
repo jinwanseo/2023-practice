@@ -1,8 +1,10 @@
+import json
 from typing import List
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 
+from common.rabbit_mq.mq import connection
 from task.dto.create_task_input import CreateTaskInput
 from task.dto.delete_task_input import DeleteTaskInput
 from task.dto.filter_task_input import FilterTaskInput
@@ -18,6 +20,7 @@ class TaskService:
     ) -> None:
         self.task_repository = task_repository
         self.scheduler = BackgroundScheduler(timezone="Asia/Seoul")
+        self.connection = connection
         # scheduler 가 start 아닐 때 만 실행
         if not self.scheduler.running:
             self.scheduler.start()
@@ -62,6 +65,23 @@ class TaskService:
 
         if task is not None:
             print(f"실행 ->  {task.title}")
+            channel = self.connection.channel()
+            channel.queue_declare(queue="rb_queue")
+
+            channel.basic_publish(
+                exchange="",
+                routing_key="rb_queue",
+                body=json.dumps(
+                    {
+                        "id": task.id,
+                        "title": task.title,
+                        "count": task.count,
+                        "keyword": task.keyword,
+                    }
+                ),
+            )
+
+            channel.close()
 
     def create_schedule(self, task: Task):
         schedule_id = f"task_{task.id}"
