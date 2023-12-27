@@ -1,3 +1,4 @@
+import datetime
 import json
 from typing import List
 
@@ -9,6 +10,7 @@ from task.dto.create_task_input import CreateTaskInput
 from task.dto.delete_task_input import DeleteTaskInput
 from task.dto.filter_task_input import FilterTaskInput
 from task.dto.update_task_input import UpdateTaskInput
+from task.entity.scheudle_type import ScheduleType
 from task.entity.task import Task
 from task.repository.task_respository import TaskRepository
 
@@ -58,40 +60,66 @@ class TaskService:
         filter_list = self.task_repository.find_filter_list(filter_task_input)
         return filter_list
 
+    # def channel_pub(self, task: Task, routing_key: str, body: str) -> None:
+    #     print(f"실행 ->  {task.title}")
+    #     channel = self.connection.channel()
+    #     channel.queue_declare(queue="rb_queue")
+    #     channel.basic_publish(
+    #         exchange="",
+    #         routing_key=routing_key,
+    #         body=body,
+    #     )
+    #     channel.close()
+
     def job(self, task_id: int):
         # Task 정보 실시간 확인
         # deploy_yn, task 최신 정보 확인
         task = self.task_repository.find_by_id(task_id)
+        if task is None:
+            pass
 
-        if task is not None:
-            print(f"실행 ->  {task.title}")
-            channel = self.connection.channel()
-            channel.queue_declare(queue="rb_queue")
-
-            channel.basic_publish(
-                exchange="",
-                routing_key="rb_queue",
-                body=json.dumps(
-                    {
-                        "id": task.id,
-                        "title": task.title,
-                        "count": task.count,
-                        "keyword": task.keyword,
-                    }
-                ),
-            )
-
-            channel.close()
+        print(f"실행 ->  {task.title} {datetime.time}")
+        channel = self.connection.channel()
+        channel.queue_declare(queue="rb_queue")
+        channel.basic_publish(
+            exchange="",
+            routing_key="rb_queue",
+            body=json.dumps(
+                {
+                    "id": task.id,
+                    "title": task.title,
+                    "count": task.count,
+                    "keyword": task.keyword,
+                }
+            ),
+        )
+        channel.close()
 
     def create_schedule(self, task: Task):
         schedule_id = f"task_{task.id}"
 
-        self.scheduler.add_job(
-            self.job,
-            trigger=IntervalTrigger(seconds=task.interval),
-            args=[task.id],
-            id=schedule_id,
-        )
+        # 월 / 주 별 반복 설정 추가시 이후 추가 예정
+
+        # Interval Job
+        if task.schedule_type == ScheduleType.INTERVAL:
+            self.scheduler.add_job(
+                func=self.job,
+                trigger=IntervalTrigger(seconds=task.interval),
+                args=[task.id],
+                id=schedule_id,
+            )
+
+        # Scheduled Job
+        if task.schedule_type == ScheduleType.DAILY:
+            self.scheduler.add_job(
+                func=self.job,
+                trigger="cron",
+                hour=task.hour,
+                minute=task.minute,
+                second=task.second,
+                args=[task.id],
+                id=schedule_id,
+            )
 
     def update_schedule(self, task: Task):
         # 기존 스케줄 삭제

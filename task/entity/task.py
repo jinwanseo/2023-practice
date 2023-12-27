@@ -1,7 +1,8 @@
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import Column, String, Integer, Enum
 
 from common.database.db import Base
 from common.entity.core_entity import CoreEntity
+from task.entity.scheudle_type import ScheduleType
 
 
 class Task(Base, CoreEntity):
@@ -11,9 +12,11 @@ class Task(Base, CoreEntity):
     keyword = Column(String)
     count = Column(Integer)
 
+    schedule_type = Column(Enum(ScheduleType), nullable=False)
+
     # 아래 부터는 스케쥴 관련 필드 (테스트 후 Table 분리 예정)
-    hour = Column(Integer)
-    minute = Column(Integer)
-    # interval 이 없으면 해당 시간에 1회만 실행
-    # interval 이 있으면 해당 시간 부터 지속 적으로 실행
+    hour = Column(Integer, nullable=True)
+    minute = Column(Integer, nullable=True)
+    second = Column(Integer, nullable=True)
+
     interval = Column(Integer, nullable=True)

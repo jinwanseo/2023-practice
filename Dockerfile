@@ -1,5 +1,5 @@
-#FROM --platform=linux/amd64 python:3.12
-FROM python:3.12
+FROM --platform=linux/amd64 python:3.12
+#FROM python:3.12
 WORKDIR /app
 
 COPY . .
@@ -19,4 +19,4 @@ ENV MQ_PASS=6clr96bgEgQkw5N_siqS2jSJs88W0aYX
 
 EXPOSE 8000
 
-CMD ["uvicorn", "main:app", "--reload"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
