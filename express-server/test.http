@@ -1,0 +1,119 @@
+
+### [클라이언트] 내 정보 조회
+GET http://localhost:8080/api/client/my?managerPk=631f3313b85886030681fafd HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJjbGllbnRQayI6IjYzMTQ5NTEwZTZkNmFkNWJjNjk0MzAyYSJ9.VGJmfSJR1wbzuwgeIkfe65i0dFFJGonFaXBXY2aBflU
+
+### [클라이언트] 대기열 추가
+POST https://standby-server.herokuapp.com/api/client/login?managerPk=631f3313b85886030681fafd HTTP/1.1
+Content-Type: Application/json
+
+{
+  "name" : "jinwan",
+  "phone" : "01088886306"
+}
+
+### [클라이언트] 대기열 삭제
+DELETE https://standby-server.herokuapp.com/api/client/cancel?managerPk=631f3313b85886030681fafd HTTP/1.1
+Content-Type: Application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJjbGllbnRQayI6IjYzMTQ5NTEwZTZkNmFkNWJjNjk0MzAyYSJ9.VGJmfSJR1wbzuwgeIkfe65i0dFFJGonFaXBXY2aBflU
+
+### [클라이언트] 스토어 정보 조회
+GET https://standby-server.herokuapp.com/api/client/store?managerPk=631f3313b85886030681fafd HTTP/1.1
+
+
+### [스토어] 회원 가입
+POST https://standby-server.herokuapp.com/api/manager/register
+Content-Type: Application/json
+
+{
+  "userId" : "admin@gmail.com",
+  "userPw" : "Tjwjdgh3@@",
+  "name" : "서진완",
+  "phone" : "010-8080-6306",
+  "storeName" : "투게더",
+  "storeAddress" : "투게더 반포점",
+  "storeNumber" : "02-333-4432",
+  "blogUrl" : "http://togetherlab.co.kr"
+}
+
+### [스토어] 로그인
+POST https://standby-server.herokuapp.com/api/manager/login HTTP/1.1
+Content-Type: Application/json
+
+{
+  "userId" : "admin2",
+  "userPw" : "Tjwjdgh3@@"
+}
+
+### [스토어] 중복체크 (아이디)
+GET https://standby-server.herokuapp.com/api/manager/check/id?userId=admin1
+
+
+### [스토어] 회원 정보 변경
+PUT https://standby-server.herokuapp.com/api/manager/register HTTP/1.1
+Content-Type: Application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJtYW5hZ2VyUGsiOiI2MzE0OTE4NWZhYzU0MTA1NmE5MzZiMjcifQ.Nl1KegYlVcR2eAXQRDfrHm1lOU18AmHzaeuCziDkf4I
+
+{
+  "name" : "서진완1",
+  "phone" : "010-8080-6306",
+  "storeName" : "Cheap1"
+}
+
+### [스토어] 내정보 조회
+GET https://standby-server.herokuapp.com/api/manager/my HTTP/1.1
+Content-Type: Application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJtYW5hZ2VyUGsiOiI2MzE0OTE4NWZhYzU0MTA1NmE5MzZiMjcifQ.Nl1KegYlVcR2eAXQRDfrHm1lOU18AmHzaeuCziDkf4I
+
+### [스토어] 대기 현황
+GET https://standby-server.herokuapp.com/api/manager/standby HTTP/1.1
+Content-Type: Application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJtYW5hZ2VyUGsiOiI2MzE0OTE4NWZhYzU0MTA1NmE5MzZiMjcifQ.Nl1KegYlVcR2eAXQRDfrHm1lOU18AmHzaeuCziDkf4I
+
+
+### [스토어] 호출
+PUT https://standby-server.herokuapp.com/api/manager/call HTTP/1.1
+Content-Type: Application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJtYW5hZ2VyUGsiOiI2MzE0OTE4NWZhYzU0MTA1NmE5MzZiMjcifQ.Nl1KegYlVcR2eAXQRDfrHm1lOU18AmHzaeuCziDkf4I
+
+{
+  "clientPk" : "63149510e6d6ad5bc694302a"
+}
+
+### [스토어] 입장
+PUT https://standby-server.herokuapp.com/api/manager/enter HTTP/1.1
+Content-Type: Application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJtYW5hZ2VyUGsiOiI2MzE0OTE4NWZhYzU0MTA1NmE5MzZiMjcifQ.Nl1KegYlVcR2eAXQRDfrHm1lOU18AmHzaeuCziDkf4I
+
+{
+  "clientPk" : "63149510e6d6ad5bc694302a"
+}
+
+### [스토어] 대기취소
+PUT https://standby-server.herokuapp.com/api/manager/cancel HTTP/1.1
+Content-Type: Application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJtYW5hZ2VyUGsiOiI2MzBhNDJmZTdiNjA0NzM5MGRjOTY0ZmIifQ.AGBFQFzuBnBaSYBJmGbpBdxA6EU1ScVppQ9vhfJ7xf0
+
+{
+  "clientPk" : "631415d33eb4b029c3cbb9b0"
+}
+
+### [스토어] 비밀번호 검사
+POST https://standby-server.herokuapp.com/api/manager/check/pw HTTP/1.1
+Content-Type: Application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJtYW5hZ2VyUGsiOiI2MzE0OTE4NWZhYzU0MTA1NmE5MzZiMjcifQ.Nl1KegYlVcR2eAXQRDfrHm1lOU18AmHzaeuCziDkf4I
+
+{
+  "userPw" : "Tjwjdgh3@@@"
+}
+
+### [스토어] 비밀번호 변경
+PUT https://standby-server.herokuapp.com/api/manager/change/pw HTTP/1.1
+Content-Type: Application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJtYW5hZ2VyUGsiOiI2MzE0OTE4NWZhYzU0MTA1NmE5MzZiMjcifQ.Nl1KegYlVcR2eAXQRDfrHm1lOU18AmHzaeuCziDkf4I
+
+{
+  "userPw" : "Tjwjdgh3@@",
+  "changePw" : "Tjwjdgh3@@@"
+}
