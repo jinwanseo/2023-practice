@@ -1,0 +1,35 @@
+# Test your FastAPI endpoints
+
+POST http://127.0.0.1:8000/user/create
+Content-Type: application/json
+
+{
+  "name": "jinwanseo",
+  "email": "jinwanseo@gmail.com"
+}
+
+###
+
+PATCH http://127.0.0.1:8000/user/update/1
+Content-Type: application/json
+
+{
+  "name": "admin"
+}
+
+###
+
+DELETE http://127.0.0.1:8000/user/delete
+Content-Type: application/json
+
+{
+  "user_id": 1
+}
+
+###
+
+GET http://127.0.0.1:8000/user/profile/email/jinwanseo@gmail.com
+Content-Type: application/json
+
+
+###
