@@ -1,0 +1,23 @@
+{
+  //where type script
+  // watching typescript all inside of ./src files
+  "include": ["src"],
+  "compilerOptions": {
+    // 컴파일된 자바스크립트 파일이 생성될 위치
+    "outDir": "build",
+    // 자바스크립트 컴파일 버전
+    "target": "ES6",
+    // 라이브러리 추가
+    // 즉, 자바스크립트가 실행될 환경에 해당하는 라이브러리를 명시 해놓을시
+    // 관련된 vscode type의 제안 등 인텔리센스 기능이 활성화됨
+    // DOM -> document 관련 인텔리 센스 활성화 (타입 추가)
+    // ES6 -> MATH 등의 ES6 기본 API 인텔리 센스 활성화 (타입 추가)
+    "lib": ["ES6"],
+    // 엄격 모드 ON
+    "strict": true,
+    "esModuleInterop": true,
+    "module": "CommonJS"
+    // .ts 파일에 .js 파일 import 가능 여부
+    // "allowJs": true
+  }
+}
